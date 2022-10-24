@@ -2,19 +2,25 @@ import React from 'react';
 import './App.css';
 import rockGlass from './images/rockGlass.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import MealProvider from './contexts/MealProvider';
+import CocktailProvider from './contexts/CocktailProvider';
 
 function App() {
   return (
-    <div className="meals">
-      <span className="logo">TRYBE</span>
-      <object
-        className="rocksGlass"
-        type="image/svg+xml"
-        data={ rockGlass }
-      >
-        Glass
-      </object>
-    </div>
+    <MealProvider>
+      <CocktailProvider>
+        <div className="meals">
+          <span className="logo">TRYBE</span>
+          <object
+            className="rocksGlass"
+            type="image/svg+xml"
+            data={ rockGlass }
+          >
+            Glass
+          </object>
+        </div>
+      </CocktailProvider>
+    </MealProvider>
   );
 }
 
