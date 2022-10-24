@@ -9,6 +9,7 @@ function App() {
   return (
     <MealProvider>
       <CocktailProvider>
+
         <div className="meals">
           <span className="logo">TRYBE</span>
           <object
