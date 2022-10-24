@@ -4,11 +4,13 @@ import rockGlass from './images/rockGlass.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MealProvider from './contexts/MealProvider';
 import CocktailProvider from './contexts/CocktailProvider';
+import Header from './components/Header';
 
 function App() {
   return (
     <MealProvider>
       <CocktailProvider>
+        <Header />
         <div className="meals">
           <span className="logo">TRYBE</span>
           <object
