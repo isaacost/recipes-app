@@ -10,7 +10,7 @@ function App() {
   return (
     <MealProvider>
       <CocktailProvider>
-        <Header />
+       <Header />
         <div className="meals">
           <span className="logo">TRYBE</span>
           <object
