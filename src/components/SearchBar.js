@@ -10,8 +10,13 @@ export default function SearchBar() {
     setSearchInput,
   } = useContext(MealContext);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    searchMeals();
+  };
+
   return (
-    <form>
+    <form onSubmit={ handleSubmit }>
       <fieldset>
         <label htmlFor="search-input">
           <input
@@ -34,6 +39,7 @@ export default function SearchBar() {
           />
           Ingrediente
         </label>
+
         <label htmlFor="name">
           <input
             type="radio"
@@ -45,6 +51,7 @@ export default function SearchBar() {
           />
           Nome
         </label>
+
         <label htmlFor="firstLetter">
           <input
             type="radio"
@@ -57,10 +64,10 @@ export default function SearchBar() {
           First letter
         </label>
       </fieldset>
+
       <button
-        type="button"
+        type="submit"
         data-testid="exec-search-btn"
-        onClick={ searchMeals }
       >
         Pesquisar
       </button>

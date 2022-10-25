@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { shape } from 'prop-types';
+import { node } from 'prop-types';
 import {
   getMeals,
   getMealsByFirstLetter,
@@ -105,7 +105,7 @@ function MealProvider({ children }) {
 }
 
 MealProvider.propTypes = {
-  children: shape({}).isRequired,
+  children: node.isRequired,
 };
 
 export default MealProvider;
