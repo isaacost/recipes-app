@@ -3,15 +3,6 @@ import React from 'react';
 export default function SearchBar() {
   return (
     <form>
-      <label htmlFor="search-input">
-        <input
-          id="search-input"
-          name="search-input"
-          data-testid="search-input"
-          type="text"
-          placeholder="Pesquise por receitas"
-        />
-      </label>
       <fieldset>
         <label htmlFor="ingredients">
           <input

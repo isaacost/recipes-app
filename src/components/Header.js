@@ -31,6 +31,7 @@ export default function Header({ title }) {
                 <input
                   data-testid="search-input"
                   type="text"
+                  placeholder="Pesquise por receitas"
                 />
               </label>
             )}
