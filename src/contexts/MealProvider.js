@@ -1,14 +1,35 @@
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { shape } from 'prop-types';
-import { getMeals } from '../services/mealDBApi';
+import { node } from 'prop-types';
+import {
+  getMeals,
+  getMealsByFirstLetter,
+  getMealsByIngredient,
+  getMealsByName,
+} from '../services/mealDBApi';
 import MealContext from './MealContext';
+import {
+  getDrinksByFirstLetter,
+  getDrinksByIngredient,
+  getDrinksByName,
+} from '../services/cocktailDBApi';
 
 function MealProvider({ children }) {
   const [mealsList, setMealsList] = useState([]);
+  const [filteredFoodList, setFilteredFoodList] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [searchFor, setSearchFor] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      await getMeals();
+    };
+
+    setMealsList(fetchMeals());
+  }, []);
 
   const handleEmail = ({ target: { value } }) => {
     setEmail(value);
@@ -24,13 +45,31 @@ function MealProvider({ children }) {
     history.push('/meals');
   }, [email, history]);
 
-  useEffect(() => {
-    const fetchMeals = async () => {
-      await getMeals();
-    };
+  const searchMeals = useCallback(async () => {
+    const { pathname } = history.location;
 
-    setMealsList(fetchMeals());
-  }, []);
+    if (searchFor === 'ingredients') {
+      if (pathname === '/meals') {
+        setFilteredFoodList(await getMealsByIngredient(searchInput));
+      } else {
+        setFilteredFoodList(await getDrinksByIngredient(searchInput));
+      }
+    }
+    if (searchFor === 'name') {
+      if (pathname === '/meals') {
+        setFilteredFoodList(await getMealsByName(searchInput));
+      } else {
+        setFilteredFoodList(await getDrinksByName(searchInput));
+      }
+    }
+    if (searchFor === 'firstLetter') {
+      if (pathname === '/meals') {
+        setFilteredFoodList(await getMealsByFirstLetter(searchInput));
+      } else {
+        setFilteredFoodList(await getDrinksByFirstLetter(searchInput));
+      }
+    }
+  }, [searchFor, searchInput, history]);
 
   const value = useMemo(() => ({
     email,
@@ -39,7 +78,24 @@ function MealProvider({ children }) {
     handleEmail,
     handlePassword,
     handleSendLogin,
-  }), [email, password, mealsList, handleSendLogin]);
+    searchFor,
+    setSearchFor,
+    searchMeals,
+    searchInput,
+    setSearchInput,
+    filteredFoodList,
+  }), [
+    email,
+    password,
+    mealsList,
+    handleSendLogin,
+    searchFor,
+    setSearchFor,
+    searchMeals,
+    searchInput,
+    setSearchInput,
+    filteredFoodList,
+  ]);
 
   return (
     <MealContext.Provider value={ value }>
@@ -49,7 +105,7 @@ function MealProvider({ children }) {
 }
 
 MealProvider.propTypes = {
-  children: shape({}).isRequired,
+  children: node.isRequired,
 };
 
 export default MealProvider;

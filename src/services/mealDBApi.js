@@ -19,15 +19,19 @@ export const getMeals = async () => {
 
 export const getMealsByName = async (meal) => {
   const MEAL_BY_NAME_ENDPOINT = `https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`;
-  const response = await fetch(MEAL_BY_NAME_ENDPOINT);
-  const { meals } = await response.json();
-  return meals;
+
+  try {
+    const response = await fetch(MEAL_BY_NAME_ENDPOINT);
+    const { meals } = await response.json();
+    return meals;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getMealsCategories = async () => {
   const response = await fetch(CATEGORIES_ENDPOINT);
   const { meals } = await response.json();
-  console.log(meals);
   return meals;
 };
 
@@ -41,6 +45,30 @@ export const getIngredients = async () => {
   const response = await fetch(INGREDIENTS_ENDPOINT);
   const { meals } = await response.json();
   return meals;
+};
+
+export const getMealsByIngredient = async (ingredient) => {
+  const SEARCH_INGREDIENT_ENDPOINT = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`;
+
+  try {
+    const response = await fetch(SEARCH_INGREDIENT_ENDPOINT);
+    const { meals } = await response.json();
+    return meals;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMealsByFirstLetter = async (firstLetter) => {
+  const FIRST_LETTER_ENDPOINT = `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`;
+
+  try {
+    const response = await fetch(FIRST_LETTER_ENDPOINT);
+    const { meals } = await response.json();
+    return meals;
+  } catch (error) {
+    global.alert('Your search must have only 1 (one) character');
+  }
 };
 
 export const getIngredientImage = (ingredient) => `https://www.themealdb.com/images/ingredients/${ingredient}-Small.png`;

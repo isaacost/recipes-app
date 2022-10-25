@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { shape } from 'prop-types';
+import { node } from 'prop-types';
 import CocktailContext from './CocktailContext';
 import { getCocktails } from '../services/cocktailDBApi';
 
@@ -26,7 +26,7 @@ function CocktailProvider({ children }) {
 }
 
 CocktailProvider.propTypes = {
-  children: shape({}).isRequired,
+  children: node.isRequired,
 };
 
 export default CocktailProvider;
