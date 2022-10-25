@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { shape } from 'prop-types';
 import { getMeals } from '../services/mealDBApi';
@@ -18,11 +18,11 @@ function MealProvider({ children }) {
     setPassword(value);
   };
 
-  const handleSendLogin = () => {
+  const handleSendLogin = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
 
     history.push('/meals');
-  };
+  }, [email, history]);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -39,7 +39,7 @@ function MealProvider({ children }) {
     handleEmail,
     handlePassword,
     handleSendLogin,
-  }), [email, password, mealsList]);
+  }), [email, password, mealsList, handleSendLogin]);
 
   return (
     <MealContext.Provider value={ value }>
