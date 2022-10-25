@@ -20,6 +20,7 @@ function MealProvider({ children }) {
   const [password, setPassword] = useState('');
   const [searchFor, setSearchFor] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [selectedItem, setSelectedItem] = useState({});
   const history = useHistory();
 
   // useEffect(() => {
@@ -44,6 +45,18 @@ function MealProvider({ children }) {
     history.push('/meals');
   }, [email, history]);
 
+  const checkIfItemIsUnique = useCallback((newFilteredFoodList, route) => {
+    if (newFilteredFoodList.length === 1 && route === 'meals') {
+      history.push(`/${route}/${newFilteredFoodList[0].idMeal}`);
+      setSelectedItem(newFilteredFoodList[0]);
+    }
+
+    if (newFilteredFoodList.length === 1 && route === 'drinks') {
+      history.push(`/${route}/${newFilteredFoodList[0].idDrink}`);
+      setSelectedItem(newFilteredFoodList[0]);
+    }
+  }, [history]);
+
   const searchMeals = useCallback(async () => {
     const { pathname } = history.location;
 
@@ -54,13 +67,19 @@ function MealProvider({ children }) {
         setFilteredFoodList(await getDrinksByIngredient(searchInput));
       }
     }
+
     if (searchFor === 'name') {
       if (pathname === '/meals') {
-        setFilteredFoodList(await getMealsByName(searchInput));
+        const newFilteredFoodList = await getMealsByName(searchInput);
+        checkIfItemIsUnique(newFilteredFoodList, 'meals');
+        setFilteredFoodList(newFilteredFoodList);
       } else {
+        const newFilteredFoodList = await getDrinksByName(searchInput);
+        checkIfItemIsUnique(newFilteredFoodList, 'drinks');
         setFilteredFoodList(await getDrinksByName(searchInput));
       }
     }
+
     if (searchFor === 'firstLetter') {
       if (pathname === '/meals') {
         setFilteredFoodList(await getMealsByFirstLetter(searchInput));
@@ -68,7 +87,7 @@ function MealProvider({ children }) {
         setFilteredFoodList(await getDrinksByFirstLetter(searchInput));
       }
     }
-  }, [searchFor, searchInput, history]);
+  }, [searchFor, searchInput, history, checkIfItemIsUnique]);
 
   const value = useMemo(() => ({
     email,
@@ -83,6 +102,7 @@ function MealProvider({ children }) {
     searchInput,
     setSearchInput,
     filteredFoodList,
+    selectedItem,
   }), [
     email,
     password,
@@ -94,6 +114,7 @@ function MealProvider({ children }) {
     searchInput,
     setSearchInput,
     filteredFoodList,
+    selectedItem,
   ]);
 
   return (
