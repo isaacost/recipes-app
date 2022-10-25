@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { string } from 'prop-types';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 export default function Header({ title }) {
   const [isShow, setIsShow] = useState(false);
@@ -37,6 +38,9 @@ export default function Header({ title }) {
         )
       }
       <h1 data-testid="page-title">{ title }</h1>
+      <div>
+        <SearchBar />
+      </div>
     </header>
   );
 }
