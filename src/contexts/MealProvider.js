@@ -1,8 +1,7 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
 import {
-  getMeals,
   getMealsByFirstLetter,
   getMealsByIngredient,
   getMealsByName,
@@ -15,7 +14,7 @@ import {
 } from '../services/cocktailDBApi';
 
 function MealProvider({ children }) {
-  const [mealsList, setMealsList] = useState([]);
+  // const [mealsList, setMealsList] = useState([]);
   const [filteredFoodList, setFilteredFoodList] = useState([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,13 +22,13 @@ function MealProvider({ children }) {
   const [searchInput, setSearchInput] = useState('');
   const history = useHistory();
 
-  useEffect(() => {
-    const fetchMeals = async () => {
-      await getMeals();
-    };
+  // useEffect(() => {
+  //   const fetchMeals = async () => {
+  //     await getMeals();
+  //   };
 
-    setMealsList(fetchMeals());
-  }, []);
+  //   setMealsList(fetchMeals());
+  // }, []);
 
   const handleEmail = ({ target: { value } }) => {
     setEmail(value);
@@ -74,7 +73,7 @@ function MealProvider({ children }) {
   const value = useMemo(() => ({
     email,
     password,
-    mealsList,
+    // mealsList,
     handleEmail,
     handlePassword,
     handleSendLogin,
@@ -87,7 +86,7 @@ function MealProvider({ children }) {
   }), [
     email,
     password,
-    mealsList,
+    // mealsList,
     handleSendLogin,
     searchFor,
     setSearchFor,

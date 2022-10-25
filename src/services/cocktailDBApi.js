@@ -3,6 +3,7 @@ const COCKTAILS_ENDPOINT = 'https://www.thecocktaildb.com/api/json/v1/1/search.p
 export const getCocktails = async () => {
   const response = await fetch(COCKTAILS_ENDPOINT);
   const data = await response.json();
+  console.log(data.drinks);
 
   const drinks = [];
   const numberOfDrinks = 12;

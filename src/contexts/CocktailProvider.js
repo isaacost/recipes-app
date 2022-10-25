@@ -1,22 +1,21 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { node } from 'prop-types';
 import CocktailContext from './CocktailContext';
-import { getCocktails } from '../services/cocktailDBApi';
 
 function CocktailProvider({ children }) {
-  const [cocktailsList, setCocktailsList] = useState([]);
+  // const [cocktailsList, setCocktailsList] = useState([]);
 
-  useEffect(() => {
-    const fetchCocktails = async () => {
-      await getCocktails();
-    };
+  // useEffect(() => {
+  //   const fetchCocktails = async () => {
+  //     await getCocktails();
+  //   };
 
-    setCocktailsList(fetchCocktails());
-  }, []);
+  //   setCocktailsList(fetchCocktails());
+  // }, []);
 
   const value = useMemo(() => ({
-    cocktailsList,
-  }), [cocktailsList]);
+    // cocktailsList,
+  }), []);
 
   return (
     <CocktailContext.Provider value={ value }>
