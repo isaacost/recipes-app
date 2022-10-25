@@ -26,22 +26,11 @@ export default function Header({ title }) {
             >
               <img src={ searchIcon } alt="searchIcon" data-testid="search-top-btn" />
             </button>
-            { isShow && (
-              <label htmlFor="search-input">
-                <input
-                  data-testid="search-input"
-                  type="text"
-                  placeholder="Pesquise por receitas"
-                />
-              </label>
-            )}
+            { isShow && <SearchBar /> }
           </div>
         )
       }
       <h1 data-testid="page-title">{ title }</h1>
-      <div>
-        <SearchBar />
-      </div>
     </header>
   );
 }
