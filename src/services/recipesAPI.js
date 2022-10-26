@@ -12,6 +12,7 @@ export const getRecipes = async (recipeType) => {
   const recipes = [];
   const numberOfRecipes = 12;
 
+  console.log(recipeType);
   data[recipeType].forEach((recipe, index) => {
     if (index < numberOfRecipes) recipes.push(recipe);
   });
