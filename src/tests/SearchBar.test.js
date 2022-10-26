@@ -84,8 +84,8 @@ describe('Testando component SearchBar', () => {
   });
 
   it('Testa se um alerta é disparado caso o usuário pesquise por duas letras', async () => {
-    global.fetch = jest.fn(() => new Error('foo'));
     global.alert = jest.fn();
+    global.fetch = jest.fn(() => global.alert('Your search must have only 1 (one) character'));
 
     renderWithRouter(<App />, { initialEntries: ['/meals'] });
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
@@ -95,6 +95,6 @@ describe('Testando component SearchBar', () => {
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
     expect(global.fetch).toHaveBeenCalled();
-    // expect(global.alert).toHaveBeenCalled();
+    expect(global.alert).toHaveBeenCalled();
   });
 });
