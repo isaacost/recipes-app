@@ -1,8 +1,9 @@
-import React, { createContext, useMemo, useState, useCallback } from 'react';
+import React, { createContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
 
 import {
+  getRecipes,
   getRecipesByFirstLetter,
   getRecipesByIngredient,
   getRecipesByName,
@@ -13,12 +14,20 @@ export const RecipesContext = createContext();
 const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
 
 export function RecipesProvider({ children }) {
-  // const [recipesList, setRecipesList] = useState([]);
   const [filteredRecipesList, setFilteredRecipesList] = useState([]);
   const [searchFor, setSearchFor] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [selectedItem, setSelectedItem] = useState({});
   const history = useHistory();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { pathname } = history.location;
+      const recipeType = pathname.replace('/', '');
+      setFilteredRecipesList(await getRecipes(recipeType));
+    };
+    fetch();
+  }, [history]);
 
   const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList) => {
     const { pathname } = history.location;
