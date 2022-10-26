@@ -10,6 +10,8 @@ import {
 
 export const RecipesContext = createContext();
 
+const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
+
 export function RecipesProvider({ children }) {
   // const [recipesList, setRecipesList] = useState([]);
   const [filteredRecipesList, setFilteredRecipesList] = useState([]);
@@ -18,14 +20,16 @@ export function RecipesProvider({ children }) {
   const [selectedItem, setSelectedItem] = useState({});
   const history = useHistory();
 
-  const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList, route) => {
-    if (newFilteredRecipesList.length === 1 && route === 'meals') {
-      history.push(`/${route}/${newFilteredRecipesList[0].idMeal}`);
+  const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList) => {
+    const { pathname } = history.location;
+
+    if (newFilteredRecipesList.length === 1 && pathname === '/meals') {
+      history.push(`${pathname}/${newFilteredRecipesList[0].idMeal}`);
       setSelectedItem(newFilteredRecipesList[0]);
     }
 
-    if (newFilteredRecipesList.length === 1 && route === 'drinks') {
-      history.push(`/${route}/${newFilteredRecipesList[0].idDrink}`);
+    if (newFilteredRecipesList.length === 1 && pathname === '/drinks') {
+      history.push(`${pathname}/${newFilteredRecipesList[0].idDrink}`);
       setSelectedItem(newFilteredRecipesList[0]);
     }
   }, [history]);
@@ -35,21 +39,41 @@ export function RecipesProvider({ children }) {
     const recipeType = pathname.replace('/', '');
 
     if (searchFor === 'ingredients') {
-      const newFilteredRecipesList = await
-      getRecipesByIngredient(searchInput, recipeType);
-      setFilteredRecipesList(newFilteredRecipesList);
+      const newFilteredRecipesList = await getRecipesByIngredient(
+        searchInput,
+        recipeType,
+      );
+      setFilteredRecipesList(newFilteredRecipesList || []);
+
+      if (!newFilteredRecipesList) {
+        global.alert(ERROR_MESSAGE);
+      }
     }
 
     if (searchFor === 'name') {
-      const newFilteredRecipesList = await getRecipesByName(searchInput, recipeType);
-      checkIfRecipeIsUnique(newFilteredRecipesList, recipeType);
-      setFilteredRecipesList(newFilteredRecipesList);
+      const newFilteredRecipesList = await getRecipesByName(
+        searchInput,
+        recipeType,
+      );
+
+      checkIfRecipeIsUnique(newFilteredRecipesList || []);
+      setFilteredRecipesList(newFilteredRecipesList || []);
+
+      if (!newFilteredRecipesList) {
+        global.alert(ERROR_MESSAGE);
+      }
     }
 
     if (searchFor === 'firstLetter') {
-      const newFilteredRecipesList = await
-      getRecipesByFirstLetter(searchInput, recipeType);
-      setFilteredRecipesList(newFilteredRecipesList);
+      const newFilteredRecipesList = await getRecipesByFirstLetter(
+        searchInput,
+        recipeType,
+      );
+      setFilteredRecipesList(newFilteredRecipesList || []);
+
+      if (!newFilteredRecipesList) {
+        global.alert(ERROR_MESSAGE);
+      }
     }
   }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
 
