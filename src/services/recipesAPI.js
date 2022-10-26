@@ -2,6 +2,24 @@ const CATEGORIES_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?c=
 const NATIONALITIES_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?a=list';
 const INGREDIENTS_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?i=list';
 
+export const getRecipes = async (recipeType) => {
+  const RECIPES_ENDPOINT = recipeType === 'meals'
+    ? 'https://www.themealdb.com/api/json/v1/1/search.php?s='
+    : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+
+  const response = await fetch(RECIPES_ENDPOINT);
+  const data = await response.json();
+
+  const recipes = [];
+  const numberOfRecipes = 12;
+
+  data[recipeType].forEach((recipe, index) => {
+    if (index < numberOfRecipes) recipes.push(recipe);
+  });
+
+  return recipes;
+};
+
 export const getRecipesByName = async (recipeName, recipeType) => {
   const BY_NAME_ENDPOINT = recipeType === 'meals'
     ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${recipeName}`
@@ -38,6 +56,7 @@ export const getRecipesByFirstLetter = async (firstLetter, recipeType) => {
   try {
     const response = await fetch(BY_FIRST_LETTER_ENDPOINT);
     const data = await response.json();
+    console.log(data);
     return data[recipeType];
   } catch (error) {
     global.alert('Your search must have only 1 (one) character');
@@ -63,18 +82,3 @@ export const getIngredients = async () => {
 };
 
 export const getIngredientImage = (ingredient) => `https://www.themealdb.com/images/ingredients/${ingredient}-Small.png`;
-
-// export const getMeals = async () => {
-//   const MEALS_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
-//   const response = await fetch(MEALS_ENDPOINT);
-//   const data = await response.json();
-
-//   const meals = [];
-//   const numberOfMeals = 12;
-
-//   data.meals.forEach((meal, index) => {
-//     if (index < numberOfMeals) meals.push(meal);
-//   });
-
-//   return meals;
-// };
