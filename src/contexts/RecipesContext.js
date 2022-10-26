@@ -4,6 +4,7 @@ import { node } from 'prop-types';
 
 import {
   getRecipes,
+  getRecipesByCategory,
   getRecipesByFirstLetter,
   getRecipesByIngredient,
   getRecipesByName,
@@ -86,6 +87,10 @@ export function RecipesProvider({ children }) {
     }
   }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
 
+  const fetchRecipesByCategory = async (categoryName, categoryType) => {
+    setFilteredRecipesList(await getRecipesByCategory(categoryName, categoryType));
+  };
+
   const value = useMemo(() => ({
     searchFor,
     setSearchFor,
@@ -93,7 +98,9 @@ export function RecipesProvider({ children }) {
     searchInput,
     setSearchInput,
     filteredRecipesList,
+    setFilteredRecipesList,
     selectedItem,
+    fetchRecipesByCategory,
   }), [
     searchFor,
     setSearchFor,
@@ -101,6 +108,7 @@ export function RecipesProvider({ children }) {
     searchInput,
     setSearchInput,
     filteredRecipesList,
+    setFilteredRecipesList,
     selectedItem,
   ]);
 

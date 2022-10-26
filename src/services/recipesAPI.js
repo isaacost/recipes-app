@@ -77,6 +77,16 @@ export const getRecipesCategories = async (categoryType) => {
   }, []);
 };
 
+export const getRecipesByCategory = async (categoryName, categoryType) => {
+  const BY_CATEGORY_ENDPOINT = categoryType === 'meals'
+    ? `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
+    : `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${categoryName}`;
+
+  const response = await fetch(BY_CATEGORY_ENDPOINT);
+  const data = await response.json();
+  return data[categoryType];
+};
+
 export const getNationalities = async () => {
   const response = await fetch(NATIONALITIES_ENDPOINT);
   const { meals } = await response.json();
