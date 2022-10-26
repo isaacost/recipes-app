@@ -39,6 +39,20 @@ function MealProvider({ children }) {
     setPassword(value);
   };
 
+  const handleFavoriteRecipes = useCallback(() => {
+    history.push('/favorite-recipes');
+  }, [history]);
+
+  const handleDoneRecipes = useCallback(() => {
+    history.push('/done-recipes');
+  }, [history]);
+
+  const handleLogout = useCallback(() => {
+    localStorage.clear();
+
+    history.push('/');
+  }, [history]);
+
   const handleSendLogin = useCallback(() => {
     localStorage.setItem('user', JSON.stringify({ email }));
 
@@ -103,6 +117,9 @@ function MealProvider({ children }) {
     setSearchInput,
     filteredFoodList,
     selectedItem,
+    handleDoneRecipes,
+    handleFavoriteRecipes,
+    handleLogout,
   }), [
     email,
     password,
@@ -115,6 +132,9 @@ function MealProvider({ children }) {
     setSearchInput,
     filteredFoodList,
     selectedItem,
+    handleDoneRecipes,
+    handleFavoriteRecipes,
+    handleLogout,
   ]);
 
   return (
