@@ -87,9 +87,20 @@ export function RecipesProvider({ children }) {
     }
   }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
 
-  const fetchRecipesByCategory = async (categoryName, categoryType) => {
-    setFilteredRecipesList(await getRecipesByCategory(categoryName, categoryType));
-  };
+  const fetchRecipesByCategory = useMemo(() => async (categoryName, categoryType) => {
+    const newFilteredRecipesList = await getRecipesByCategory(categoryName, categoryType);
+
+    if (newFilteredRecipesList.every(
+      (recipe, index) => {
+        const strRecipe = categoryType === 'meals' ? 'strMeal' : 'strDrink';
+        return recipe[strRecipe] === filteredRecipesList[index][strRecipe];
+      },
+    )) {
+      setFilteredRecipesList(await getRecipes(categoryType));
+    } else {
+      setFilteredRecipesList(newFilteredRecipesList);
+    }
+  }, [filteredRecipesList]);
 
   const value = useMemo(() => ({
     searchFor,
@@ -110,6 +121,7 @@ export function RecipesProvider({ children }) {
     filteredRecipesList,
     setFilteredRecipesList,
     selectedItem,
+    fetchRecipesByCategory,
   ]);
 
   return (
