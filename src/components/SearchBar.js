@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import MealContext from '../contexts/MealContext';
+import { RecipesContext } from '../contexts/RecipesContext';
 
 export default function SearchBar() {
   const {
@@ -8,7 +8,7 @@ export default function SearchBar() {
     searchMeals,
     searchInput,
     setSearchInput,
-  } = useContext(MealContext);
+  } = useContext(RecipesContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
