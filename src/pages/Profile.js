@@ -8,37 +8,46 @@ export default function Profile() {
     handleFavoriteRecipes,
     handleLogout } = useContext(MealContext);
   const email = JSON.parse(localStorage.getItem('user'));
-  // console.log(Object.values(email));
+  console.log(email);
   return (
     <div>
       <Header title="Profile" />
-      <p data-testid="profile-email">
-        { Object.values(email) }
-      </p>
+      <div>
+        {
+          (email === null)
+            ? (<p data-testid="profile-email"> Sem usuário </p>)
+            : (
+              <p data-testid="profile-email">
+                {Object.values(email)}
+              </p>
+            )
+        }
+      </div>
+      <div>
+        <button
+          type="button"
+          data-testid="profile-done-btn"
+          onClick={ handleDoneRecipes }
+        >
+          Done Recipes
+        </button>
 
-      <button
-        type="button"
-        data-testid="profile-done-btn"
-        onClick={ handleDoneRecipes }
-      >
-        Done Recipes
-      </button>
+        <button
+          type="button"
+          data-testid="profile-favorite-btn"
+          onClick={ handleFavoriteRecipes }
+        >
+          Favorite Recipes
+        </button>
 
-      <button
-        type="button"
-        data-testid="profile-favorite-btn"
-        onClick={ handleFavoriteRecipes }
-      >
-        Favorite Recipes
-      </button>
-
-      <button
-        type="button"
-        data-testid="profile-logout-btn"
-        onClick={ handleLogout }
-      >
-        Logout
-      </button>
+        <button
+          type="button"
+          data-testid="profile-logout-btn"
+          onClick={ handleLogout }
+        >
+          Logout
+        </button>
+      </div>
       <Footer />
     </div>
   );
