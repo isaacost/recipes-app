@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useMemo, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
 
@@ -20,15 +20,6 @@ export function RecipesProvider({ children }) {
   const [searchInput, setSearchInput] = useState('');
   const [selectedItem, setSelectedItem] = useState({});
   const history = useHistory();
-
-  useEffect(() => {
-    const fetch = async () => {
-      const { pathname } = history.location;
-      const recipeType = pathname.replace('/', '');
-      setFilteredRecipesList(await getRecipes(recipeType));
-    };
-    fetch();
-  }, [history]);
 
   const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList) => {
     const { pathname } = history.location;

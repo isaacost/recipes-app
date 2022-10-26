@@ -13,17 +13,24 @@ export default function Recipes({ title }) {
   const history = useHistory();
   const { fetchRecipesByCategory, setFilteredRecipesList } = useContext(RecipesContext);
   const { pathname } = history.location;
-  const categoryType = pathname.replace('/', '');
+  const recipeType = pathname.replace('/', '');
 
   useEffect(() => {
     const fetch = async () => {
-      setCategoriesList(await getRecipesCategories(categoryType));
+      setCategoriesList(await getRecipesCategories(recipeType));
     };
     fetch();
-  }, [categoryType]);
+  }, [recipeType]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      setFilteredRecipesList(await getRecipes(recipeType));
+    };
+    fetch();
+  }, [history, recipeType, setFilteredRecipesList]);
 
   const resetRecipes = async () => {
-    const newFilteredRecipesList = await getRecipes(categoryType);
+    const newFilteredRecipesList = await getRecipes(recipeType);
     setFilteredRecipesList(newFilteredRecipesList);
   };
 
@@ -38,7 +45,7 @@ export default function Recipes({ title }) {
               key={ strCategory }
               data-testid={ `${strCategory}-category-filter` }
               type="button"
-              onClick={ () => fetchRecipesByCategory(strCategory, categoryType) }
+              onClick={ () => fetchRecipesByCategory(strCategory, recipeType) }
             >
               {strCategory}
             </button>
