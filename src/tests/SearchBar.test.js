@@ -65,7 +65,7 @@ describe('Testando component SearchBar', () => {
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Chicken');
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalled();
     expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=Chicken');
   });
 
@@ -82,7 +82,7 @@ describe('Testando component SearchBar', () => {
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Spicy Arrabiata Penne');
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalled();
     expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=Spicy Arrabiata Penne');
   });
 
@@ -99,7 +99,7 @@ describe('Testando component SearchBar', () => {
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'a');
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalled();
     expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=a');
   });
 
