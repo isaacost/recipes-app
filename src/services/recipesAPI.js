@@ -1,4 +1,3 @@
-const CATEGORIES_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
 const NATIONALITIES_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?a=list';
 const INGREDIENTS_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?i=list';
 
@@ -44,10 +43,19 @@ export const getRecipesByFirstLetter = async (firstLetter, recipeType) => {
   }
 };
 
-export const getMealsCategories = async () => {
+export const getRecipesCategories = async (categoryType) => {
+  const CATEGORIES_ENDPOINT = categoryType === 'meals'
+    ? 'https://www.themealdb.com/api/json/v1/1/list.php?c=list'
+    : 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
+
   const response = await fetch(CATEGORIES_ENDPOINT);
-  const { meals } = await response.json();
-  return meals;
+  const data = await response.json();
+  const MAX_CATEGORIES_LENGTH = 5;
+
+  return data[categoryType].reduce((acc, category, index) => {
+    if (index < MAX_CATEGORIES_LENGTH) acc.push(category);
+    return acc;
+  }, []);
 };
 
 export const getNationalities = async () => {
