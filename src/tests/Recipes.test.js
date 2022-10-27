@@ -3,12 +3,18 @@ import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
+// import { getRecipes } from '../services/recipesAPI';
+// import meals from '../../cypress/mocks/meals';
 
 describe('Testando componente Recipes', () => {
   it('Testa se botão limpa os filtros de categorias', async () => {
-    // global.fetch = jest.fn(async () => Promise.resolve({
+    // getRecipes = jest.fn.mockImplementation(async () => Promise.resolve({
     //   json: async () => Promise.resolve(mealCategories),
     // }));
+
+    // jest.mock('getRecipes', () => jest.fn.mockImplementation(async () => Promise.resolve({
+    //   json: async () => Promise.resolve(meals),
+    // })));
 
     renderWithRouter(<App />, { initialEntries: ['/meals'] });
 
@@ -32,6 +38,6 @@ describe('Testando componente Recipes', () => {
       expect(screen.getByRole('img', { name: /corba/i })).toBeInTheDocument();
     });
 
-    // expect(global.fetch).toHaveBeenCalled();
+    // expect(getRecipes).toHaveBeenCalled();
   });
 });

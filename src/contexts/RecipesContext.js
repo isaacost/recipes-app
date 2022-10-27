@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, useCallback } from 'react';
+import React, { createContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
 
@@ -10,6 +10,27 @@ import {
   getRecipesByName,
 } from '../services/recipesAPI';
 
+// const TEST_DONE_RECIPE = [{
+//   id: '15997',
+//   type: 'drink',
+//   nationality: '',
+//   category: 'Ordinary Drink',
+//   alcoholicOrNot: 'Optional alcohol',
+//   name: 'GG',
+//   image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
+//   doneDate: '11/11/11',
+//   tags: [],
+// }];
+
+// const TEST_IN_PROGRESS_RECIPE = {
+//   drinks: {
+//     17222: [''],
+//   },
+//   meals: {
+//     1: [],
+//   },
+// };
+
 export const RecipesContext = createContext();
 
 const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
@@ -19,7 +40,34 @@ export function RecipesProvider({ children }) {
   const [searchFor, setSearchFor] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [selectedItem, setSelectedItem] = useState({});
+  const [doneRecipes, setDoneRecipes] = useState([]);
+  const [inProgressRecipes, setInProgressRecipes] = useState({ drinks: {}, meals: {} });
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+
   const history = useHistory();
+
+  useEffect(() => {
+    const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (!localDoneRecipes) {
+      localStorage.setItem('doneRecipes', JSON.stringify(doneRecipes));
+    } else {
+      setDoneRecipes(localDoneRecipes);
+    }
+
+    const localInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!localInProgressRecipes) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+    } else {
+      setInProgressRecipes(localInProgressRecipes);
+    }
+
+    const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (!localFavoriteRecipes) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+    } else {
+      setFavoriteRecipes(localFavoriteRecipes);
+    }
+  }, []);
 
   const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList) => {
     const { pathname } = history.location;
@@ -103,6 +151,10 @@ export function RecipesProvider({ children }) {
     setFilteredRecipesList,
     selectedItem,
     fetchRecipesByCategory,
+    doneRecipes,
+    inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
   }), [
     searchFor,
     setSearchFor,
@@ -113,6 +165,10 @@ export function RecipesProvider({ children }) {
     setFilteredRecipesList,
     selectedItem,
     fetchRecipesByCategory,
+    doneRecipes,
+    inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
   ]);
 
   return (

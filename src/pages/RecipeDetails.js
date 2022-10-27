@@ -1,16 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipeDetails, getRecipes } from '../services/recipesAPI';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const MAX_CARD_LENGTH = 6;
+const ONE_SEC = 1000;
+const copy = require('clipboard-copy');
 
 export default function RecipeDetails() {
+  const {
+    doneRecipes,
+    inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
+  } = useContext(RecipesContext);
+
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
   const [recommendationsList, setRecommendationsList] = useState([]);
+  const [isLinkCopied, setIsLinkCopied] = useState(false);
   const { pathname } = history.location;
   const recipeId = pathname.split('/')[2];
   const recipeType = pathname.split('/')[1];
+  const type = recipeType === 'meals' ? 'Meal' : 'Drink';
 
   const ingredientsList = Object
     .entries(recipeDetails)
@@ -41,7 +57,6 @@ export default function RecipeDetails() {
     const fetch = async () => {
       const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
       setRecipeDetails(newRecipeDetails[0]);
-      console.log(await getRecipeDetails(recipeId, recipeType));
     };
 
     fetch();
@@ -56,8 +71,73 @@ export default function RecipeDetails() {
     fetch();
   }, [recipeType]);
 
+  const handleShareButton = () => {
+    copy(window.location.href);
+    setIsLinkCopied(true);
+    setTimeout(() => setIsLinkCopied(false), ONE_SEC);
+  };
+
+  const handleFavoriteButton = () => {
+    const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+
+    const newFavoriteRecipe = {
+      id: recipeDetails[`id${type}`],
+      type: recipeType.replace('s', ''),
+      nationality: recipeDetails.strArea || '',
+      category: recipeDetails.strCategory || '',
+      alcoholicOrNot: recipeDetails.strAlcoholic || '',
+      name: recipeDetails[`str${type}`],
+      image: recipeDetails[`str${type}Thumb`],
+    };
+
+    if (!localFavoriteRecipes) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([newFavoriteRecipe]));
+      setFavoriteRecipes([newFavoriteRecipe]);
+    } else {
+      const newLocalFavoriteRecipes = localFavoriteRecipes
+        .filter((recipe) => recipe.id !== recipeDetails[`id${type}`]);
+
+      if (newLocalFavoriteRecipes.length === localFavoriteRecipes.length) {
+        localStorage.setItem(
+          'favoriteRecipes',
+          JSON.stringify([...localFavoriteRecipes, newFavoriteRecipe]),
+        );
+        setFavoriteRecipes([...localFavoriteRecipes, newFavoriteRecipe]);
+      } else {
+        localStorage.setItem(
+          'favoriteRecipes',
+          JSON.stringify([...newLocalFavoriteRecipes]),
+        );
+        setFavoriteRecipes([...newLocalFavoriteRecipes]);
+      }
+    }
+  };
+
   return (
     <div>
+      <button
+        type="button"
+        data-testid="share-btn"
+        onClick={ handleShareButton }
+      >
+        <img src={ shareIcon } alt="ícone de compartilhar" />
+      </button>
+      {isLinkCopied && <p>Link copied!</p>}
+
+      <button
+        type="button"
+        onClick={ handleFavoriteButton }
+      >
+        <img
+          data-testid="favorite-btn"
+          src={ favoriteRecipes
+            .some((recipe) => recipe.id === recipeDetails[`id${type}`])
+            ? blackHeartIcon
+            : whiteHeartIcon }
+          alt="ícone de favoritar"
+        />
+      </button>
+
       {recipeType === 'meals'
         ? (
           <div>
@@ -139,6 +219,21 @@ export default function RecipeDetails() {
             </div>
           </div>
         )}
+
+      {doneRecipes.every((recipe) => recipe.id !== recipeId) && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { bottom: '0px', position: 'fixed' } }
+          onClick={ () => history.push(`/${recipeType}/${recipeId}/in-progress`) }
+        >
+          {Object.keys(inProgressRecipes[recipeType])
+            .every((id) => id !== recipeId)
+            ? 'Start Recipe'
+            : 'Continue Recipe'}
+        </button>
+      )}
+
     </div>
   );
 }
