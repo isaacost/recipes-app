@@ -1,15 +1,22 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipeDetails, getRecipes } from '../services/recipesAPI';
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const MAX_CARD_LENGTH = 6;
+const ONE_SEC = 1000;
+const copy = require('clipboard-copy');
 
 export default function RecipeDetails() {
   const { doneRecipes, inProgressRecipes } = useContext(RecipesContext);
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
   const [recommendationsList, setRecommendationsList] = useState([]);
+  const [isLinkCopied, setIsLinkCopied] = useState(false);
   const { pathname } = history.location;
   const recipeId = pathname.split('/')[2];
   const recipeType = pathname.split('/')[1];
@@ -57,8 +64,27 @@ export default function RecipeDetails() {
     fetch();
   }, [recipeType]);
 
+  const handleShareButton = () => {
+    copy(window.location.href);
+    setIsLinkCopied(true);
+    setTimeout(() => setIsLinkCopied(false), ONE_SEC);
+  };
+
   return (
     <div>
+      <button
+        type="button"
+        data-testid="share-btn"
+        onClick={ handleShareButton }
+      >
+        <img src={ shareIcon } alt="ícone de compartilhar" />
+      </button>
+      {isLinkCopied && <p>Link copied!</p>}
+
+      <button type="button" data-testid="favorite-btn">
+        <img src={ whiteHeartIcon } alt="ícone de favoritar branco" />
+      </button>
+
       {recipeType === 'meals'
         ? (
           <div>
