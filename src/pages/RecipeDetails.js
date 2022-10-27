@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { getRecipeDetails } from '../services/recipesAPI';
+import { getRecipeDetails, getRecipes } from '../services/recipesAPI';
+
+const MAX_CARD_LENGTH = 6;
 
 export default function RecipeDetails() {
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [recommendationsList, setRecommendationsList] = useState([]);
   const { pathname } = history.location;
   const recipeId = pathname.split('/')[2];
   const recipeType = pathname.split('/')[1];
@@ -44,6 +47,15 @@ export default function RecipeDetails() {
     fetch();
   }, [recipeId, recipeType]);
 
+  useEffect(() => {
+    const fetch = async () => {
+      const newRecipeType = recipeType === 'meals' ? 'drinks' : 'meals';
+      const newRecommendationsList = await getRecipes(newRecipeType);
+      setRecommendationsList(newRecommendationsList);
+    };
+    fetch();
+  }, [recipeType]);
+
   return (
     <div>
       {recipeType === 'meals'
@@ -69,6 +81,26 @@ export default function RecipeDetails() {
               height="315"
               src={ youtubeLink }
             />
+
+            <div style={ { overflowX: 'scroll', display: 'flex' } }>
+              {recommendationsList
+                .filter((card, index) => index < MAX_CARD_LENGTH && card)
+                .map(({ idDrink, strDrinkThumb, strDrink }, index) => (
+                  <div
+                    key={ idDrink }
+                    data-testid={ `${index}-recommendation-card` }
+                    style={ { width: '51%' } }
+                  >
+                    <img
+                      src={ strDrinkThumb }
+                      alt={ strDrink }
+                    />
+                    <h3 data-testid={ `${index}-recommendation-title` }>
+                      {strDrink}
+                    </h3>
+                  </div>
+                ))}
+            </div>
           </div>
         )
         : (
@@ -85,6 +117,26 @@ export default function RecipeDetails() {
             {ingredientsListElement}
 
             <p data-testid="instructions">{recipeDetails.strInstructions}</p>
+
+            <div style={ { overflowX: 'scroll', display: 'flex' } }>
+              {recommendationsList
+                .filter((card, index) => index < MAX_CARD_LENGTH && card)
+                .map(({ idMeal, strMealThumb, strMeal }, index) => (
+                  <div
+                    key={ idMeal }
+                    data-testid={ `${index}-recommendation-card` }
+                    style={ { width: '51%' } }
+                  >
+                    <img
+                      src={ strMealThumb }
+                      alt={ strMeal }
+                    />
+                    <h3 data-testid={ `${index}-recommendation-title` }>
+                      {strMeal}
+                    </h3>
+                  </div>
+                ))}
+            </div>
           </div>
         )}
     </div>
