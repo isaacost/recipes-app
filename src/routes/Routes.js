@@ -2,13 +2,12 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import Login from '../pages/Login';
-import MealsInProgress from '../pages/MealsInProgress';
-import DrinksInProgress from '../pages/DrinksIsProgress';
 import Profile from '../pages/Profile';
 import DoneRecipes from '../pages/DoneRecipes';
 import FavoriteRecipes from '../pages/FavoriteRecipes';
 import Recipes from '../pages/Recipes';
 import RecipeDetails from '../pages/RecipeDetails';
+import RecipeInProgress from '../pages/RecipeInProgress';
 
 export default function Routes() {
   return (
@@ -17,18 +16,18 @@ export default function Routes() {
       <Route exact path="/meals" render={ () => <Recipes title="Meals" /> } />
       <Route exact path="/drinks" render={ () => <Recipes title="Drinks" /> } />
 
-      <Route exact path="/meals/:id" render={ () => <RecipeDetails /> } />
-      <Route exact path="/drinks/:id" render={ () => <RecipeDetails /> } />
+      <Route exact path="/meals/:id" component={ RecipeDetails } />
+      <Route exact path="/drinks/:id" component={ RecipeDetails } />
 
       <Route
         exact
         path="/meals/:id/in-progress"
-        component={ MealsInProgress }
+        component={ RecipeInProgress }
       />
       <Route
         exact
         path="/drinks/:id/in-progress"
-        component={ DrinksInProgress }
+        component={ RecipeInProgress }
       />
       <Route exact path="/profile" component={ Profile } />
       <Route exact path="/done-recipes" component={ DoneRecipes } />

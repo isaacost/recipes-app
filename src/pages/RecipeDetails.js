@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipeDetails, getRecipes } from '../services/recipesAPI';
 
 const MAX_CARD_LENGTH = 6;
 
 export default function RecipeDetails() {
+  const { doneRecipes, inProgressRecipes } = useContext(RecipesContext);
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
   const [recommendationsList, setRecommendationsList] = useState([]);
@@ -41,7 +43,6 @@ export default function RecipeDetails() {
     const fetch = async () => {
       const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
       setRecipeDetails(newRecipeDetails[0]);
-      console.log(await getRecipeDetails(recipeId, recipeType));
     };
 
     fetch();
@@ -139,6 +140,21 @@ export default function RecipeDetails() {
             </div>
           </div>
         )}
+
+      {doneRecipes.every((recipe) => recipe.id !== recipeId) && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          style={ { bottom: '0px', position: 'fixed' } }
+          onClick={ () => history.push(`/${recipeType}/${recipeId}/in-progress`) }
+        >
+          {Object.keys(inProgressRecipes[recipeType])
+            .every((id) => id !== recipeId)
+            ? 'Start Recipe'
+            : 'Continue Recipe'}
+        </button>
+      )}
+
     </div>
   );
 }
