@@ -2,14 +2,13 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import Login from '../pages/Login';
-import MealsIdReceita from '../pages/MealsIdReceita';
-import DrinksIdReceita from '../pages/DrinksIdReceita';
 import MealsInProgress from '../pages/MealsInProgress';
-import DrinksInProgress from '../pages/DrinksInProgress';
+import DrinksInProgress from '../pages/DrinksIsProgress';
 import Profile from '../pages/Profile';
 import DoneRecipes from '../pages/DoneRecipes';
 import FavoriteRecipes from '../pages/FavoriteRecipes';
 import Recipes from '../pages/Recipes';
+import RecipeDetails from '../pages/RecipeDetails';
 
 export default function Routes() {
   return (
@@ -17,16 +16,18 @@ export default function Routes() {
       <Route exact path="/" component={ Login } />
       <Route exact path="/meals" render={ () => <Recipes title="Meals" /> } />
       <Route exact path="/drinks" render={ () => <Recipes title="Drinks" /> } />
-      <Route exact path="/meals/:id-da-receita" component={ MealsIdReceita } />
-      <Route exact path="/drinks/:id-da-receita" component={ DrinksIdReceita } />
+
+      <Route exact path="/meals/:id" render={ () => <RecipeDetails /> } />
+      <Route exact path="/drinks/:id" render={ () => <RecipeDetails /> } />
+
       <Route
         exact
-        path="/meals/:id-da-receita/in-progress"
+        path="/meals/:id/in-progress"
         component={ MealsInProgress }
       />
       <Route
         exact
-        path="/drinks/:id-da-receita/in-progress"
+        path="/drinks/:id/in-progress"
         component={ DrinksInProgress }
       />
       <Route exact path="/profile" component={ Profile } />

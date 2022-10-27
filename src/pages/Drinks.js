@@ -13,7 +13,10 @@ export default function Drinks() {
         if (index < MAX_RECIPES_LENGTH) acc.push(recipe);
         return acc;
       }, []).map((recipe, index) => (
-        <Link to={ `/drinks/${recipe.idDrink}` } key={ recipe.idDrink }>
+        <Link
+          to={ `/drinks/${recipe.idDrink}` }
+          key={ recipe.idDrink }
+        >
           <div data-testid={ `${index}-recipe-card` }>
             <img
               src={ recipe.strDrinkThumb }
