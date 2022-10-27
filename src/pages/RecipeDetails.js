@@ -12,7 +12,13 @@ const ONE_SEC = 1000;
 const copy = require('clipboard-copy');
 
 export default function RecipeDetails() {
-  const { doneRecipes, inProgressRecipes } = useContext(RecipesContext);
+  const {
+    doneRecipes,
+    inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
+  } = useContext(RecipesContext);
+
   const history = useHistory();
   const [recipeDetails, setRecipeDetails] = useState({});
   const [recommendationsList, setRecommendationsList] = useState([]);
@@ -20,6 +26,7 @@ export default function RecipeDetails() {
   const { pathname } = history.location;
   const recipeId = pathname.split('/')[2];
   const recipeType = pathname.split('/')[1];
+  const type = recipeType === 'meals' ? 'Meal' : 'Drink';
 
   const ingredientsList = Object
     .entries(recipeDetails)
@@ -70,6 +77,42 @@ export default function RecipeDetails() {
     setTimeout(() => setIsLinkCopied(false), ONE_SEC);
   };
 
+  const handleFavoriteButton = () => {
+    const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+
+    const newFavoriteRecipe = {
+      id: recipeDetails[`id${type}`],
+      type: recipeType.replace('s', ''),
+      nationality: recipeDetails.strArea || '',
+      category: recipeDetails.strCategory || '',
+      alcoholicOrNot: recipeDetails.strAlcoholic || '',
+      name: recipeDetails[`str${type}`],
+      image: recipeDetails[`str${type}Thumb`],
+    };
+
+    if (!localFavoriteRecipes) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([newFavoriteRecipe]));
+      setFavoriteRecipes([newFavoriteRecipe]);
+    } else {
+      const newLocalFavoriteRecipes = localFavoriteRecipes
+        .filter((recipe) => recipe.id !== recipeDetails[`id${type}`]);
+
+      if (newLocalFavoriteRecipes.length === localFavoriteRecipes.length) {
+        localStorage.setItem(
+          'favoriteRecipes',
+          JSON.stringify([...localFavoriteRecipes, newFavoriteRecipe]),
+        );
+        setFavoriteRecipes([...localFavoriteRecipes, newFavoriteRecipe]);
+      } else {
+        localStorage.setItem(
+          'favoriteRecipes',
+          JSON.stringify([...newLocalFavoriteRecipes]),
+        );
+        setFavoriteRecipes([...newLocalFavoriteRecipes]);
+      }
+    }
+  };
+
   return (
     <div>
       <button
@@ -81,8 +124,18 @@ export default function RecipeDetails() {
       </button>
       {isLinkCopied && <p>Link copied!</p>}
 
-      <button type="button" data-testid="favorite-btn">
-        <img src={ whiteHeartIcon } alt="ícone de favoritar branco" />
+      <button
+        type="button"
+        onClick={ handleFavoriteButton }
+      >
+        <img
+          data-testid="favorite-btn"
+          src={ favoriteRecipes
+            .some((recipe) => recipe.id === recipeDetails[`id${type}`])
+            ? blackHeartIcon
+            : whiteHeartIcon }
+          alt="ícone de favoritar"
+        />
       </button>
 
       {recipeType === 'meals'

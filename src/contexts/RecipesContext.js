@@ -42,6 +42,7 @@ export function RecipesProvider({ children }) {
   const [selectedItem, setSelectedItem] = useState({});
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [inProgressRecipes, setInProgressRecipes] = useState({ drinks: {}, meals: {} });
+  const [favoriteRecipes, setFavoriteRecipes] = useState([]);
 
   const history = useHistory();
 
@@ -58,6 +59,13 @@ export function RecipesProvider({ children }) {
       localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
     } else {
       setInProgressRecipes(localInProgressRecipes);
+    }
+
+    const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (!localFavoriteRecipes) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+    } else {
+      setFavoriteRecipes(localFavoriteRecipes);
     }
   }, []);
 
@@ -145,6 +153,8 @@ export function RecipesProvider({ children }) {
     fetchRecipesByCategory,
     doneRecipes,
     inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
   }), [
     searchFor,
     setSearchFor,
@@ -157,6 +167,8 @@ export function RecipesProvider({ children }) {
     fetchRecipesByCategory,
     doneRecipes,
     inProgressRecipes,
+    favoriteRecipes,
+    setFavoriteRecipes,
   ]);
 
   return (
