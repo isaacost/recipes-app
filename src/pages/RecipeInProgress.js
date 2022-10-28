@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Card from '../components/Card';
 import FavoriteButton from '../components/FavoriteButton';
 import ShareButton from '../components/ShareButton';
@@ -12,7 +13,10 @@ export default function RecipeInProgress() {
     recipeId,
     ingredientsList,
     usedIngredients,
+    recipeDetails,
+    type,
   } = useContext(RecipesContext);
+  const history = useHistory();
 
   useEffect(() => {
     const fetch = async () => {
@@ -22,6 +26,29 @@ export default function RecipeInProgress() {
 
     fetch();
   }, [recipeId, recipeType, setRecipeDetails]);
+
+  const markRecipeDone = () => {
+    history.push('/done-recipes');
+
+    const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
+
+    const newDoneRecipe = {
+      id: recipeDetails[`id${type}`],
+      type: recipeType.replace('s', ''),
+      nationality: recipeDetails.strArea || '',
+      category: recipeDetails.strCategory || '',
+      alcoholicOrNot: recipeDetails.strAlcoholic || '',
+      name: recipeDetails[`str${type}`],
+      image: recipeDetails[`str${type}Thumb`],
+      doneDate: new Date().toISOString(),
+      tags: recipeDetails.strTags?.split(',') || [],
+    };
+
+    localStorage.setItem(
+      'doneRecipes',
+      JSON.stringify([...localDoneRecipes, newDoneRecipe]),
+    );
+  };
 
   return (
     <div>
@@ -33,6 +60,7 @@ export default function RecipeInProgress() {
         type="button"
         data-testid="finish-recipe-btn"
         disabled={ usedIngredients.length !== ingredientsList.length }
+        onClick={ markRecipeDone }
       >
         Finish Recipe
       </button>
