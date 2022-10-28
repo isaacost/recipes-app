@@ -40,19 +40,6 @@ export default function RecipeDetails() {
 
   const youtubeLink = recipeDetails.strYoutube?.replace('watch?v=', 'embed/');
 
-  const ingredientsListElement = (
-    <ul>
-      {ingredientsList.map((ingredient, index) => (
-        <li
-          key={ index }
-          data-testid={ `${index}-ingredient-name-and-measure` }
-        >
-          {`${measureList[index]} ${ingredient}`}
-        </li>
-      ))}
-    </ul>
-  );
-
   useEffect(() => {
     const fetch = async () => {
       const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
@@ -64,8 +51,8 @@ export default function RecipeDetails() {
 
   useEffect(() => {
     const fetch = async () => {
-      const newRecipeType = recipeType === 'meals' ? 'drinks' : 'meals';
-      const newRecommendationsList = await getRecipes(newRecipeType);
+      const recommendationType = recipeType === 'meals' ? 'drinks' : 'meals';
+      const newRecommendationsList = await getRecipes(recommendationType);
       setRecommendationsList(newRecommendationsList);
     };
     fetch();
@@ -92,25 +79,20 @@ export default function RecipeDetails() {
 
     if (!localFavoriteRecipes) {
       localStorage.setItem('favoriteRecipes', JSON.stringify([newFavoriteRecipe]));
-      setFavoriteRecipes([newFavoriteRecipe]);
-    } else {
-      const newLocalFavoriteRecipes = localFavoriteRecipes
-        .filter((recipe) => recipe.id !== recipeDetails[`id${type}`]);
-
-      if (newLocalFavoriteRecipes.length === localFavoriteRecipes.length) {
-        localStorage.setItem(
-          'favoriteRecipes',
-          JSON.stringify([...localFavoriteRecipes, newFavoriteRecipe]),
-        );
-        setFavoriteRecipes([...localFavoriteRecipes, newFavoriteRecipe]);
-      } else {
-        localStorage.setItem(
-          'favoriteRecipes',
-          JSON.stringify([...newLocalFavoriteRecipes]),
-        );
-        setFavoriteRecipes([...newLocalFavoriteRecipes]);
-      }
+      return setFavoriteRecipes([newFavoriteRecipe]);
     }
+
+    let newLocalFavoriteRecipes = localFavoriteRecipes
+      .filter((recipe) => recipe.id !== recipeDetails[`id${type}`]);
+
+    if (newLocalFavoriteRecipes.length === localFavoriteRecipes.length) {
+      newLocalFavoriteRecipes = [...newLocalFavoriteRecipes, newFavoriteRecipe];
+    } else {
+      newLocalFavoriteRecipes = [...newLocalFavoriteRecipes];
+    }
+
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newLocalFavoriteRecipes));
+    setFavoriteRecipes(newLocalFavoriteRecipes);
   };
 
   return (
@@ -122,6 +104,7 @@ export default function RecipeDetails() {
       >
         <img src={ shareIcon } alt="ícone de compartilhar" />
       </button>
+
       {isLinkCopied && <p>Link copied!</p>}
 
       <button
@@ -138,87 +121,65 @@ export default function RecipeDetails() {
         />
       </button>
 
-      {recipeType === 'meals'
-        ? (
-          <div>
-            <img
-              src={ recipeDetails.strMealThumb }
-              alt={ recipeDetails.strMeal }
-              data-testid="recipe-photo"
-            />
+      <div>
+        <img
+          src={ recipeDetails[`str${type}Thumb`] }
+          alt={ recipeDetails[`str${type}`] }
+          data-testid="recipe-photo"
+        />
 
-            <h2 data-testid="recipe-title">{recipeDetails.strMeal}</h2>
-            <p data-testid="recipe-category">{recipeDetails.strCategory}</p>
+        <h2 data-testid="recipe-title">{recipeDetails[`str${type}`]}</h2>
+        <p data-testid="recipe-category">
+          {type === 'Meal'
+            ? recipeDetails.strCategory
+            : recipeDetails.strAlcoholic}
+        </p>
 
-            {ingredientsListElement}
+        <ul>
+          {ingredientsList.map((ingredient, index) => (
+            <li
+              key={ index }
+              data-testid={ `${index}-ingredient-name-and-measure` }
+            >
+              {`${measureList[index]} ${ingredient}`}
+            </li>
+          ))}
+        </ul>
 
-            <p data-testid="instructions">{recipeDetails.strInstructions}</p>
+        <p data-testid="instructions">{recipeDetails.strInstructions}</p>
 
-            <iframe
-              data-testid="video"
-              title="YouTube video player"
-              width="420"
-              height="315"
-              src={ youtubeLink }
-            />
+        <iframe
+          data-testid="video"
+          title="YouTube video player"
+          width="420"
+          height="315"
+          src={ youtubeLink }
+        />
 
-            <div style={ { overflowX: 'scroll', display: 'flex' } }>
-              {recommendationsList
-                .filter((card, index) => index < MAX_CARD_LENGTH && card)
-                .map(({ idDrink, strDrinkThumb, strDrink }, index) => (
-                  <div
-                    key={ idDrink }
-                    data-testid={ `${index}-recommendation-card` }
-                    style={ { width: '51%' } }
-                  >
-                    <img
-                      src={ strDrinkThumb }
-                      alt={ strDrink }
-                    />
-                    <h3 data-testid={ `${index}-recommendation-title` }>
-                      {strDrink}
-                    </h3>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )
-        : (
-          <div>
-            <img
-              src={ recipeDetails.strDrinkThumb }
-              alt={ recipeDetails.strDrink }
-              data-testid="recipe-photo"
-            />
+        <div style={ { overflowX: 'scroll', display: 'flex' } }>
+          {recommendationsList
+            .filter((card, index) => index < MAX_CARD_LENGTH && card)
+            .map((recipe, index) => {
+              const newType = type === 'Meal' ? 'Drink' : 'Meal';
 
-            <h2 data-testid="recipe-title">{recipeDetails.strDrink}</h2>
-            <p data-testid="recipe-category">{recipeDetails.strAlcoholic}</p>
-
-            {ingredientsListElement}
-
-            <p data-testid="instructions">{recipeDetails.strInstructions}</p>
-
-            <div style={ { overflowX: 'scroll', display: 'flex' } }>
-              {recommendationsList
-                .filter((card, index) => index < MAX_CARD_LENGTH && card)
-                .map(({ idMeal, strMealThumb, strMeal }, index) => (
-                  <div
-                    key={ idMeal }
-                    data-testid={ `${index}-recommendation-card` }
-                    style={ { width: '51%' } }
-                  >
-                    <img
-                      src={ strMealThumb }
-                      alt={ strMeal }
-                    />
-                    <h3 data-testid={ `${index}-recommendation-title` }>
-                      {strMeal}
-                    </h3>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
+              return (
+                <div
+                  key={ recipe[`id${newType}`] }
+                  data-testid={ `${index}-recommendation-card` }
+                  style={ { width: '51%' } }
+                >
+                  <img
+                    src={ recipe[`str${newType}Thumb`] }
+                    alt={ recipe[`str${newType}`] }
+                  />
+                  <h3 data-testid={ `${index}-recommendation-title` }>
+                    {recipe[`str${newType}`]}
+                  </h3>
+                </div>
+              );
+            })}
+        </div>
+      </div>
 
       {doneRecipes.every((recipe) => recipe.id !== recipeId) && (
         <button
