@@ -21,7 +21,6 @@ export default function Recipes({ title }) {
   useEffect(() => {
     const fetch = async () => {
       const newCategoriesList = await getRecipesCategories(recipeType);
-      console.log(recipeType);
       setCategoriesList(newCategoriesList[recipeType]);
     };
     fetch();
