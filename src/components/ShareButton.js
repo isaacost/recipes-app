@@ -8,7 +8,7 @@ export default function ShareButton() {
   const [isLinkCopied, setIsLinkCopied] = useState(false);
 
   const handleShareButton = () => {
-    copy(window.location.href);
+    copy(window.location.href.replace('/in-progress', ''));
     setIsLinkCopied(true);
     setTimeout(() => setIsLinkCopied(false), ONE_SEC);
   };
