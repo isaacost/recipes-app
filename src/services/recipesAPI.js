@@ -7,16 +7,7 @@ export const getRecipes = async (recipeType) => {
     : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
 
   const response = await fetch(RECIPES_ENDPOINT);
-  const data = await response.json();
-
-  const recipes = [];
-  const numberOfRecipes = 12;
-
-  data[recipeType].forEach((recipe, index) => {
-    if (index < numberOfRecipes) recipes.push(recipe);
-  });
-
-  return recipes;
+  return response.json();
 };
 
 export const getRecipesByName = async (recipeName, recipeType) => {
@@ -27,7 +18,7 @@ export const getRecipesByName = async (recipeName, recipeType) => {
   try {
     const response = await fetch(BY_NAME_ENDPOINT);
     const data = await response.json();
-    return data[recipeType];
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -41,7 +32,7 @@ export const getRecipesByIngredient = async (ingredientName, recipeType) => {
   try {
     const response = await fetch(BY_INGREDIENT_ENDPOINT);
     const data = await response.json();
-    return data[recipeType];
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -55,8 +46,7 @@ export const getRecipesByFirstLetter = async (firstLetter, recipeType) => {
   try {
     const response = await fetch(BY_FIRST_LETTER_ENDPOINT);
     const data = await response.json();
-    console.log(data);
-    return data[recipeType];
+    return data;
   } catch (error) {
     global.alert('Your search must have only 1 (one) character');
   }
@@ -68,13 +58,7 @@ export const getRecipesCategories = async (categoryType) => {
     : 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
 
   const response = await fetch(CATEGORIES_ENDPOINT);
-  const data = await response.json();
-  const MAX_CATEGORIES_LENGTH = 5;
-
-  return data[categoryType].reduce((acc, category, index) => {
-    if (index < MAX_CATEGORIES_LENGTH) acc.push(category);
-    return acc;
-  }, []);
+  return response.json();
 };
 
 export const getRecipesByCategory = async (categoryName, categoryType) => {
@@ -84,7 +68,7 @@ export const getRecipesByCategory = async (categoryName, categoryType) => {
 
   const response = await fetch(BY_CATEGORY_ENDPOINT);
   const data = await response.json();
-  return data[categoryType];
+  return data;
 };
 
 export const getRecipeDetails = async (recipeId, recipeType) => {
@@ -94,7 +78,7 @@ export const getRecipeDetails = async (recipeId, recipeType) => {
 
   const response = await fetch(RECIPE_DETAILS_ENDPOINT);
   const data = await response.json();
-  return data[recipeType];
+  return data;
 };
 
 export const getNationalities = async () => {

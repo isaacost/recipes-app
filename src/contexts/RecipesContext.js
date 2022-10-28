@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
@@ -92,7 +93,7 @@ export function RecipesProvider({ children }) {
         searchInput,
         recipeType,
       );
-      setFilteredRecipesList(newFilteredRecipesList || []);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
 
       if (!newFilteredRecipesList) {
         global.alert(ERROR_MESSAGE);
@@ -105,12 +106,9 @@ export function RecipesProvider({ children }) {
         recipeType,
       );
 
-      checkIfRecipeIsUnique(newFilteredRecipesList || []);
-      setFilteredRecipesList(newFilteredRecipesList || []);
-
-      if (!newFilteredRecipesList) {
-        global.alert(ERROR_MESSAGE);
-      }
+      if (!newFilteredRecipesList[recipeType]) return global.alert(ERROR_MESSAGE);
+      checkIfRecipeIsUnique(newFilteredRecipesList[recipeType] || []);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
     }
 
     if (searchFor === 'firstLetter') {
@@ -118,26 +116,28 @@ export function RecipesProvider({ children }) {
         searchInput,
         recipeType,
       );
-      setFilteredRecipesList(newFilteredRecipesList || []);
 
-      if (!newFilteredRecipesList) {
-        global.alert(ERROR_MESSAGE);
-      }
+      if (!newFilteredRecipesList) return global.alert(ERROR_MESSAGE);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
     }
   }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
 
   const fetchRecipesByCategory = useMemo(() => async (categoryName, categoryType) => {
     const newFilteredRecipesList = await getRecipesByCategory(categoryName, categoryType);
+    const { pathname } = history.location;
+    const recipeType = pathname.replace('/', '');
 
-    if (newFilteredRecipesList.every(
+    if (newFilteredRecipesList[recipeType]?.every(
       (recipe, index) => {
         const strRecipe = categoryType === 'meals' ? 'strMeal' : 'strDrink';
         return recipe[strRecipe] === filteredRecipesList[index][strRecipe];
       },
     )) {
-      setFilteredRecipesList(await getRecipes(categoryType));
+      console.log('called');
+      const newRecipes = await getRecipes(categoryType);
+      setFilteredRecipesList(newRecipes[recipeType]);
     } else {
-      setFilteredRecipesList(newFilteredRecipesList);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
   }, [filteredRecipesList]);
 

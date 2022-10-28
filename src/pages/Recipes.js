@@ -8,6 +8,8 @@ import Meals from './Meals';
 import { getRecipes, getRecipesCategories } from '../services/recipesAPI';
 import { RecipesContext } from '../contexts/RecipesContext';
 
+const MAX_CATEGORIES_LENGTH = 5;
+
 export default function Recipes({ title }) {
   const [categoriesList, setCategoriesList] = useState([]);
   const history = useHistory();
@@ -17,21 +19,23 @@ export default function Recipes({ title }) {
 
   useEffect(() => {
     const fetch = async () => {
-      setCategoriesList(await getRecipesCategories(recipeType));
+      const newCategoriesList = await getRecipesCategories(recipeType);
+      setCategoriesList(newCategoriesList[recipeType]);
     };
     fetch();
   }, [recipeType]);
 
   useEffect(() => {
     const fetch = async () => {
-      setFilteredRecipesList(await getRecipes(recipeType));
+      const newFilteredRecipesList = await getRecipes(recipeType);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     };
     fetch();
   }, [history, recipeType, setFilteredRecipesList]);
 
   const resetRecipes = async () => {
     const newFilteredRecipesList = await getRecipes(recipeType);
-    setFilteredRecipesList(newFilteredRecipesList);
+    setFilteredRecipesList(newFilteredRecipesList[recipeType]);
   };
 
   return (
@@ -40,16 +44,20 @@ export default function Recipes({ title }) {
 
       <main>
         <div>
-          {categoriesList.map(({ strCategory }) => (
-            <button
-              key={ strCategory }
-              data-testid={ `${strCategory}-category-filter` }
-              type="button"
-              onClick={ () => fetchRecipesByCategory(strCategory, recipeType) }
-            >
-              {strCategory}
-            </button>
-          ))}
+          {
+            categoriesList
+              .filter((_, index) => index < MAX_CATEGORIES_LENGTH)
+              .map(({ strCategory }) => (
+                <button
+                  key={ strCategory }
+                  data-testid={ `${strCategory}-category-filter` }
+                  type="button"
+                  onClick={ () => fetchRecipesByCategory(strCategory, recipeType) }
+                >
+                  {strCategory}
+                </button>
+              ))
+          }
 
           <button
             type="button"

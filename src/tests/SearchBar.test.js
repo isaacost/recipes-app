@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
@@ -7,6 +7,10 @@ import mealsByIngredient from '../../cypress/mocks/mealsByIngredient';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import meals from '../../cypress/mocks/meals';
 import firstLetterMock from './helpers/firstLetterMock';
+import mealCategories from '../../cypress/mocks/mealCategories';
+import * as api from '../services/recipesAPI';
+
+jest.mock('../services/recipesAPI');
 
 const SEARCH_INPUT = 'search-input';
 const INGREDIENT_SEARCH_RADIO = 'ingredient-search-radio';
@@ -14,24 +18,17 @@ const FIRST_LETTER_SEARCH_RADIO = 'first-letter-search-radio';
 const EXEC_SEARCH_BTN = 'exec-search-btn';
 
 describe('Testando component SearchBar', () => {
-  beforeEach(() => {
-    global.fetch = jest.fn(async () => Promise.resolve({
-      json: async () => Promise.resolve(meals),
-    }));
-  });
-
-  // it('Testa se api é chamada quando aplicação é renderizada', () => {
+  // beforeEach(() => {
   //   global.fetch = jest.fn(async () => Promise.resolve({
   //     json: async () => Promise.resolve(meals),
   //   }));
-
-  //   renderWithRouter(<App />, { initialEntries: ['/meals'] });
-
-  //   expect(global.fetch).toHaveBeenCalledTimes(1);
   // });
 
-  it('Testa se todos inputs existem na tela', () => {
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
+  it('Testa se todos inputs existem na tela', async () => {
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipesCategories.mockResolvedValue(mealCategories);
+    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
 
     const searchInput = screen.getByTestId(SEARCH_INPUT);
@@ -43,8 +40,11 @@ describe('Testando component SearchBar', () => {
     expect(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO)).toBeInTheDocument();
   });
 
-  it('Testa se botão de pesquisa existe na tela', () => {
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
+  it('Testa se botão de pesquisa existe na tela', async () => {
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipesCategories.mockResolvedValue(mealCategories);
+    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
 
     const searchButton = screen.getByTestId(EXEC_SEARCH_BTN);
@@ -52,69 +52,50 @@ describe('Testando component SearchBar', () => {
     expect(searchButton.type).toBe('submit');
   });
 
-  it('Testa se é possível pesquisar por ingredientes', () => {
-    // Warning sobre act
-    global.fetch = jest.fn(async () => Promise.resolve({
-      json: async () => Promise.resolve(mealsByIngredient),
-    }));
+  it('Testa se é possível pesquisar por ingredientes', async () => {
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipesCategories.mockResolvedValue(mealCategories);
+    api.getRecipesByIngredient.mockResolvedValue(mealsByIngredient);
+    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
 
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-
     userEvent.click(screen.getByTestId('ingredient-search-radio'));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Chicken');
-    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(global.fetch).toHaveBeenCalled();
-    expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=Chicken');
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
+    expect(api.getRecipesByIngredient).toHaveBeenCalled();
+    expect(screen.getByRole('img', { name: /brown stew chicken/i })).toBeInTheDocument();
   });
 
-  it('Testa se é possível pesquisar por nome', () => {
-    // Warning sobre act
-    global.fetch = jest.fn(async () => Promise.resolve({
-      json: async () => Promise.resolve(oneMeal),
-    }));
+  it('Testa se é possível pesquisar por nome', async () => {
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipesCategories.mockResolvedValue(mealCategories);
+    api.getRecipesByName.mockResolvedValue(oneMeal);
+    api.getRecipeDetails.mockResolvedValue(oneMeal);
+    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
 
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-
     userEvent.click(screen.getByTestId('name-search-radio'));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Spicy Arrabiata Penne');
-    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
 
-    expect(global.fetch).toHaveBeenCalled();
-    expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=Spicy Arrabiata Penne');
+    expect(api.getRecipesByName).toHaveBeenCalled();
+    expect(api.getRecipeDetails).toHaveBeenCalled();
+    expect(screen.getByRole('img', { name: /spicy arrabiata penne/i })).toBeInTheDocument();
   });
 
-  it('Testa se é possível pesquisar pela primeira letra', () => {
-    // Warning sobre act
-    global.fetch = jest.fn(async () => Promise.resolve({
-      json: async () => Promise.resolve(firstLetterMock),
-    }));
+  it('Testa se é possível pesquisar pela primeira letra', async () => {
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipesCategories.mockResolvedValue(mealCategories);
+    api.getRecipesByFirstLetter.mockResolvedValue(firstLetterMock);
+    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
 
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-
     userEvent.click(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'a');
-    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
 
-    expect(global.fetch).toHaveBeenCalled();
-    expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=a');
-  });
-
-  it.skip('Testa se um alerta é disparado caso o usuário pesquise por duas letras', async () => {
-    global.alert = jest.fn();
-    global.fetch = jest.fn(async () => global.alert('Your search must have only 1 (one) character'));
-
-    renderWithRouter(<App />, { initialEntries: ['/meals'] });
-    userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-
-    userEvent.click(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO));
-    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'aa');
-    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
-
-    expect(global.fetch).toHaveBeenCalled();
-    expect(global.alert).toHaveBeenCalled();
+    expect(api.getRecipesByFirstLetter).toHaveBeenCalled();
+    expect(screen.getByRole('img', { name: /apple frangipan tart/i })).toBeInTheDocument();
   });
 });
