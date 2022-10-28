@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect } from 'react';
 import { RecipesContext } from '../contexts/RecipesContext';
 
 export default function CheckboxList() {
@@ -8,8 +9,10 @@ export default function CheckboxList() {
     recipeType,
     recipeId,
     inProgressRecipes,
+    usedIngredients,
+    setUsedIngredients,
   } = useContext(RecipesContext);
-  const [usedIngredients, setUsedIngredients] = useState([]);
+  // const [usedIngredients, setUsedIngredients] = useState([]);
   const lineStyles = 'line-through solid rgb(0, 0, 0)';
 
   useEffect(() => {

@@ -10,6 +10,8 @@ export default function RecipeInProgress() {
     setRecipeDetails,
     recipeType,
     recipeId,
+    ingredientsList,
+    usedIngredients,
   } = useContext(RecipesContext);
 
   useEffect(() => {
@@ -30,6 +32,7 @@ export default function RecipeInProgress() {
       <button
         type="button"
         data-testid="finish-recipe-btn"
+        disabled={ usedIngredients.length !== ingredientsList.length }
       >
         Finish Recipe
       </button>

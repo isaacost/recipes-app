@@ -24,6 +24,7 @@ export function RecipesProvider({ children }) {
   const [inProgressRecipes, setInProgressRecipes] = useState({ drinks: {}, meals: {} });
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [usedIngredients, setUsedIngredients] = useState([]);
 
   const history = useHistory();
   const { pathname } = history.location;
@@ -149,6 +150,8 @@ export function RecipesProvider({ children }) {
     recipeId,
     ingredientsList,
     measureList,
+    usedIngredients,
+    setUsedIngredients,
   }), [
     searchFor,
     setSearchFor,
@@ -170,6 +173,8 @@ export function RecipesProvider({ children }) {
     recipeId,
     ingredientsList,
     measureList,
+    usedIngredients,
+    setUsedIngredients,
   ]);
 
   return (
