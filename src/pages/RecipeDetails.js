@@ -43,7 +43,7 @@ export default function RecipeDetails() {
   useEffect(() => {
     const fetch = async () => {
       const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
-      setRecipeDetails(newRecipeDetails[0]);
+      setRecipeDetails(newRecipeDetails[[recipeType]][0]);
     };
 
     fetch();
@@ -53,7 +53,7 @@ export default function RecipeDetails() {
     const fetch = async () => {
       const recommendationType = recipeType === 'meals' ? 'drinks' : 'meals';
       const newRecommendationsList = await getRecipes(recommendationType);
-      setRecommendationsList(newRecommendationsList);
+      setRecommendationsList(newRecommendationsList[recommendationType]);
     };
     fetch();
   }, [recipeType]);
@@ -158,7 +158,7 @@ export default function RecipeDetails() {
 
         <div style={ { overflowX: 'scroll', display: 'flex' } }>
           {recommendationsList
-            .filter((card, index) => index < MAX_CARD_LENGTH && card)
+            ?.filter((card, index) => index < MAX_CARD_LENGTH && card)
             .map((recipe, index) => {
               const newType = type === 'Meal' ? 'Drink' : 'Meal';
 
