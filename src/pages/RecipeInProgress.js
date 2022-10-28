@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Card from '../components/Card';
 import FavoriteButton from '../components/FavoriteButton';
 import ShareButton from '../components/ShareButton';
-import StartButton from '../components/StartButton';
+import { RecipesContext } from '../contexts/RecipesContext';
+import { getRecipeDetails } from '../services/recipesAPI';
 
 export default function RecipeInProgress() {
+  const {
+    setRecipeDetails,
+    recipeType,
+    recipeId,
+  } = useContext(RecipesContext);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
+      setRecipeDetails(newRecipeDetails[[recipeType]][0]);
+    };
+
+    fetch();
+  }, [recipeId, recipeType, setRecipeDetails]);
+
   return (
     <div>
       <ShareButton />

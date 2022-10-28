@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipes } from '../services/recipesAPI';
+import CheckboxList from './CheckboxList';
 import IngredientsList from './IngredientsList';
 
 const MAX_CARD_LENGTH = 6;
@@ -9,6 +11,8 @@ export default function Card() {
   const { type, recipeDetails, recipeType } = useContext(RecipesContext);
   const [recommendationsList, setRecommendationsList] = useState([]);
   const youtubeLink = recipeDetails.strYoutube?.replace('watch?v=', 'embed/');
+  const history = useHistory();
+  const { pathname } = history.location;
 
   useEffect(() => {
     const fetch = async () => {
@@ -34,7 +38,9 @@ export default function Card() {
           : recipeDetails.strAlcoholic}
       </p>
 
-      <IngredientsList />
+      {pathname.includes('in-progress')
+        ? <CheckboxList />
+        : <IngredientsList />}
 
       <p data-testid="instructions">{recipeDetails.strInstructions}</p>
 

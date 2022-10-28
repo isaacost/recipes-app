@@ -31,6 +31,16 @@ export function RecipesProvider({ children }) {
   const recipeId = pathname.split('/')[2];
   const type = recipeType === 'meals' ? 'Meal' : 'Drink';
 
+  const ingredientsList = Object
+    .entries(recipeDetails)
+    .filter((item) => item[0].includes('strIngredient') && item[1])
+    .map((item) => item[1]);
+
+  const measureList = Object
+    .entries(recipeDetails)
+    .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ')
+    .map((item) => item[1]);
+
   useEffect(() => {
     const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     if (!localDoneRecipes) {
@@ -137,6 +147,8 @@ export function RecipesProvider({ children }) {
     type,
     recipeType,
     recipeId,
+    ingredientsList,
+    measureList,
   }), [
     searchFor,
     setSearchFor,
@@ -156,6 +168,8 @@ export function RecipesProvider({ children }) {
     type,
     recipeType,
     recipeId,
+    ingredientsList,
+    measureList,
   ]);
 
   return (
