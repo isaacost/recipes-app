@@ -58,7 +58,8 @@ export const getRecipesCategories = async (categoryType) => {
     : 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
 
   const response = await fetch(CATEGORIES_ENDPOINT);
-  return response.json();
+  const data = response.json();
+  return data;
 };
 
 export const getRecipesByCategory = async (categoryName, categoryType) => {
