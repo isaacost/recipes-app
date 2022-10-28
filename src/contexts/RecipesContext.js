@@ -11,27 +11,6 @@ import {
   getRecipesByName,
 } from '../services/recipesAPI';
 
-// const TEST_DONE_RECIPE = [{
-//   id: '15997',
-//   type: 'drink',
-//   nationality: '',
-//   category: 'Ordinary Drink',
-//   alcoholicOrNot: 'Optional alcohol',
-//   name: 'GG',
-//   image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
-//   doneDate: '11/11/11',
-//   tags: [],
-// }];
-
-// const TEST_IN_PROGRESS_RECIPE = {
-//   drinks: {
-//     17222: [''],
-//   },
-//   meals: {
-//     1: [],
-//   },
-// };
-
 export const RecipesContext = createContext();
 
 const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
@@ -44,8 +23,24 @@ export function RecipesProvider({ children }) {
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [inProgressRecipes, setInProgressRecipes] = useState({ drinks: {}, meals: {} });
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+  const [recipeDetails, setRecipeDetails] = useState({});
+  const [usedIngredients, setUsedIngredients] = useState([]);
 
   const history = useHistory();
+  const { pathname } = history.location;
+  const recipeType = pathname.split('/')[1];
+  const recipeId = pathname.split('/')[2];
+  const type = recipeType === 'meals' ? 'Meal' : 'Drink';
+
+  const ingredientsList = Object
+    .entries(recipeDetails)
+    .filter((item) => item[0].includes('strIngredient') && item[1])
+    .map((item) => item[1]);
+
+  const measureList = Object
+    .entries(recipeDetails)
+    .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ')
+    .map((item) => item[1]);
 
   useEffect(() => {
     const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
@@ -71,8 +66,6 @@ export function RecipesProvider({ children }) {
   }, []);
 
   const checkIfRecipeIsUnique = useCallback((newFilteredRecipesList) => {
-    const { pathname } = history.location;
-
     if (newFilteredRecipesList.length === 1 && pathname === '/meals') {
       history.push(`${pathname}/${newFilteredRecipesList[0].idMeal}`);
       setSelectedItem(newFilteredRecipesList[0]);
@@ -85,9 +78,6 @@ export function RecipesProvider({ children }) {
   }, [history]);
 
   const searchMeals = useCallback(async () => {
-    const { pathname } = history.location;
-    const recipeType = pathname.replace('/', '');
-
     if (searchFor === 'ingredients') {
       const newFilteredRecipesList = await getRecipesByIngredient(
         searchInput,
@@ -124,8 +114,6 @@ export function RecipesProvider({ children }) {
 
   const fetchRecipesByCategory = useMemo(() => async (categoryName, categoryType) => {
     const newFilteredRecipesList = await getRecipesByCategory(categoryName, categoryType);
-    const { pathname } = history.location;
-    const recipeType = pathname.replace('/', '');
 
     if (newFilteredRecipesList[recipeType]?.every(
       (recipe, index) => {
@@ -155,6 +143,15 @@ export function RecipesProvider({ children }) {
     inProgressRecipes,
     favoriteRecipes,
     setFavoriteRecipes,
+    recipeDetails,
+    setRecipeDetails,
+    type,
+    recipeType,
+    recipeId,
+    ingredientsList,
+    measureList,
+    usedIngredients,
+    setUsedIngredients,
   }), [
     searchFor,
     setSearchFor,
@@ -169,6 +166,15 @@ export function RecipesProvider({ children }) {
     inProgressRecipes,
     favoriteRecipes,
     setFavoriteRecipes,
+    recipeDetails,
+    setRecipeDetails,
+    type,
+    recipeType,
+    recipeId,
+    ingredientsList,
+    measureList,
+    usedIngredients,
+    setUsedIngredients,
   ]);
 
   return (

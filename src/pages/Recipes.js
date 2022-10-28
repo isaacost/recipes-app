@@ -14,8 +14,9 @@ export default function Recipes({ title }) {
   const [categoriesList, setCategoriesList] = useState([]);
   const history = useHistory();
   const { fetchRecipesByCategory, setFilteredRecipesList } = useContext(RecipesContext);
+
   const { pathname } = history.location;
-  const recipeType = pathname.replace('/', '');
+  const recipeType = pathname.split('/').filter((item) => item !== '/').join('');
 
   useEffect(() => {
     const fetch = async () => {
