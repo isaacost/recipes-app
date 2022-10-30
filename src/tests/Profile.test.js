@@ -14,14 +14,14 @@ const emailLocalStorage = () => {
 
 describe('Testando componente Profile', () => {
   it('Verifica se não há nada no localStorage', () => {
-    renderWithRouter(<App />, { initialEntries: ['/profile'] });
+    renderWithRouter(<App />, '/profile');
     emailLocalStorage();
 
     const email = screen.getByTestId('profile-email');
     expect(email).toBeInTheDocument();
   });
   it('Verifica se redireciona os botões e o email na página', () => {
-    renderWithRouter(<App />, { initialEntries: ['/profile'] });
+    renderWithRouter(<App />, '/profile');
     emailLocalStorage();
 
     const email = screen.getByTestId('profile-email');
@@ -37,7 +37,7 @@ describe('Testando componente Profile', () => {
     expect(bottomLogout).toBeInTheDocument();
   });
   it('Verifica se o botão Done Recipes redireciona para rota correta', () => {
-    const { history } = renderWithRouter(<App />, { initialEntries: ['/profile'] });
+    const { history } = renderWithRouter(<App />, '/profile');
     emailLocalStorage();
 
     const bottomDone = screen.getByTestId('profile-done-btn');
@@ -47,7 +47,7 @@ describe('Testando componente Profile', () => {
     expect(pathname).toBe('/done-recipes');
   });
   it('Verifica se o botão Favorite Recipes redireciona para rota correta', () => {
-    const { history } = renderWithRouter(<App />, { initialEntries: ['/profile'] });
+    const { history } = renderWithRouter(<App />, '/profile');
     emailLocalStorage();
 
     const bottomFavorite = screen.getByTestId('profile-favorite-btn');
@@ -57,7 +57,7 @@ describe('Testando componente Profile', () => {
     expect(pathname).toBe('/favorite-recipes');
   });
   it('Verifica se o botão Logout redireciona para rota correta', () => {
-    const { history } = renderWithRouter(<App />, { initialEntries: ['/profile'] });
+    const { history } = renderWithRouter(<App />, '/profile');
     emailLocalStorage();
 
     const bottomLogout = screen.getByTestId('profile-logout-btn');

@@ -1,8 +1,7 @@
-import React from 'react';
 import useEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
-import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
+import App from '../App';
 
 const emailInput = 'email-input';
 const passwordInput = 'password-input';
@@ -10,7 +9,7 @@ const buttonInput = 'login-submit-btn';
 
 describe('Testando a página de Login', () => {
   it('Verifica se os inputs estão renderizados', () => {
-    renderWithRouter(<App />);
+    renderWithRouter(<App />, <App />, '/');
     const email = screen.getByTestId(emailInput);
     expect(email).toBeInTheDocument();
     const password = screen.getByTestId(passwordInput);
@@ -20,7 +19,7 @@ describe('Testando a página de Login', () => {
   });
 
   it('Verifica se o botão Enter é habilitado', () => {
-    renderWithRouter(<App />);
+    renderWithRouter(<App />, '/');
     const email = screen.getByTestId(emailInput);
     const password = screen.getByTestId(passwordInput);
     const button = screen.getByTestId(buttonInput);
@@ -31,7 +30,7 @@ describe('Testando a página de Login', () => {
   });
 
   it('Verifica se ao clicar no botão a rota está correta', () => {
-    const { history } = renderWithRouter(<App />);
+    const { history } = renderWithRouter(<App />, '/');
     const email = screen.getByTestId(emailInput);
     const password = screen.getByTestId(passwordInput);
     const button = screen.getByTestId(buttonInput);

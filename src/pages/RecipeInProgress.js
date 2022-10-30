@@ -9,19 +9,20 @@ import { getRecipeDetails } from '../services/recipesAPI';
 export default function RecipeInProgress() {
   const {
     setRecipeDetails,
-    recipeType,
     recipeId,
     ingredientsList,
     usedIngredients,
     recipeDetails,
     type,
   } = useContext(RecipesContext);
+
   const history = useHistory();
+  const recipeType = history.location.pathname.split('/')[1];
 
   useEffect(() => {
     const fetch = async () => {
       const newRecipeDetails = await getRecipeDetails(recipeId, recipeType);
-      setRecipeDetails(newRecipeDetails[[recipeType]][0]);
+      setRecipeDetails(newRecipeDetails[recipeType][0]);
     };
 
     fetch();

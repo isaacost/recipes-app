@@ -8,11 +8,17 @@ import IngredientsList from './IngredientsList';
 const MAX_CARD_LENGTH = 6;
 
 export default function Card() {
-  const { type, recipeDetails, recipeType } = useContext(RecipesContext);
-  const [recommendationsList, setRecommendationsList] = useState([]);
-  const youtubeLink = recipeDetails.strYoutube?.replace('watch?v=', 'embed/');
   const history = useHistory();
   const { pathname } = history.location;
+
+  const {
+    type,
+    recipeType,
+    recipeDetails,
+  } = useContext(RecipesContext);
+
+  const [recommendationsList, setRecommendationsList] = useState([]);
+  const youtubeLink = recipeDetails.strYoutube?.replace('watch?v=', 'embed/');
 
   useEffect(() => {
     const fetch = async () => {

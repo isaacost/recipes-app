@@ -2,17 +2,21 @@ import React from 'react';
 import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
+
 import renderWithRouter from './helpers/renderWithRouter';
-// import * as api from '../services/recipesAPI';
-// import drinks from '../../cypress/mocks/drinks';
+import * as api from '../services/recipesAPI';
 
-// jest.mock('../services/recipesAPI');
+import drinks from '../../cypress/mocks/drinks';
+import meals from '../../cypress/mocks/meals';
+import oneMeal from '../../cypress/mocks/oneMeal';
+import oneDrink from '../../cypress/mocks/oneDrink';
 
-const setLocalStorage = (id, data) => {
-  window.localStorage.setItem(id, JSON.stringify(data));
-};
+jest.mock('../services/recipesAPI');
+jest.mock('clipboard-copy', () => jest.fn());
 
-const FAVORITE_RECIPE_MOCK = {
+const copy = require('clipboard-copy');
+
+const FAVORITE_MEAL_MOCK = {
   id: '52771',
   type: 'meal',
   nationality: 'Italian',
@@ -22,48 +26,134 @@ const FAVORITE_RECIPE_MOCK = {
   image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
 };
 
+const FAVORITE_DRINK_MOCK = {
+  id: '178319',
+  type: 'drink',
+  nationality: '',
+  category: 'Cocktail',
+  alcoholicOrNot: 'Alcoholic',
+  name: 'Aquamarine',
+  image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
+};
+
+const IN_PROGRESS_MEAL_ROUTE = '/meals/52771/in-progress';
+const IN_PROGRESS_DRINK_ROUTE = '/drinks/178319/in-progress';
+
 describe('Testando componente RecipeInProgress', () => {
   it('Testa botão de compartilhar', async () => {
-    // 1. se ta na tela
-    // 2. se copia link
-    // 3. se aparece mensagem
+    api.getRecipes.mockResolvedValue(drinks);
+    api.getRecipeDetails.mockResolvedValue(oneMeal);
 
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals/52771/in-progress'] }); });
+    copy.mockImplementation(() => null);
+    await act(async () => { renderWithRouter(<App />, IN_PROGRESS_MEAL_ROUTE); });
 
     const shareButton = screen.getByRole('button', { name: /ícone de compartilhar/i });
     expect(shareButton).toBeInTheDocument();
-    // userEvent.click(shareButton);
+    expect(shareButton.type).toBe('button');
+    expect(screen.getByRole('img', { name: /ícone de compartilhar/i })).toBeInTheDocument();
+
+    expect(screen.queryByText('Link copied!')).toBe(null);
+    userEvent.click(shareButton);
+
+    expect(copy).toHaveBeenCalled();
+
+    // Como testar o que tem no clipboard
+    const copiedLinkElement = screen.getByText('Link copied!');
+    expect(copiedLinkElement).toBeInTheDocument();
+    setTimeout(() => expect(copiedLinkElement).not.toBeInTheDocument(), 1000);
   });
 
   it('Testa botão de favoritar', async () => {
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals/52771/in-progress'] }); });
+    api.getRecipes.mockResolvedValueOnce(drinks);
+    api.getRecipeDetails.mockResolvedValueOnce(oneMeal);
 
-    localStorage.clear();
+    let history;
+    await act(async () => {
+      const { history: h } = renderWithRouter(<App />, IN_PROGRESS_MEAL_ROUTE);
+      history = h;
+    });
 
-    const favoriteButton = screen.getByRole('img', { name: /ícone de favoritar/i });
-    expect(favoriteButton.src).toContain('whiteHeartIcon.svg');
-    userEvent.click(favoriteButton);
-    expect(favoriteButton.src).toContain('blackHeartIcon.svg');
+    const whiteHeartIcon = 'whiteHeartIcon.svg';
+    const blackHeartIcon = 'blackHeartIcon.svg';
+    expect(screen.getByRole('img', { name: /ícone de favoritar/i }).src).toContain(whiteHeartIcon);
 
-    const localFavoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-    expect(localFavoriteRecipes.length).toBe(1);
+    await act(async () => { userEvent.click(screen.getByRole('img', { name: /ícone de favoritar/i })); });
 
-    setLocalStorage('favoriteRecipes', [...localFavoriteRecipes, FAVORITE_RECIPE_MOCK]);
-    expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(2);
-
-    userEvent.click(favoriteButton);
     expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(1);
+    expect(JSON.parse(localStorage.getItem('favoriteRecipes'))[0]).toEqual(FAVORITE_MEAL_MOCK);
+    expect(screen.getByRole('img', { name: /ícone de favoritar/i }).src).toContain(blackHeartIcon);
 
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals/53060/in-progress'] }); });
-    userEvent.click(favoriteButton);
-    expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(2);
+    await act(async () => { userEvent.click(screen.getByRole('img', { name: /ícone de favoritar/i })); });
+
+    expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(0);
+    expect(screen.getByRole('img', { name: /ícone de favoritar/i }).src).toContain(whiteHeartIcon);
+
+    // Testando drinks
+    api.getRecipes.mockResolvedValue(meals);
+    api.getRecipeDetails.mockResolvedValue(oneDrink);
+    await act(async () => { history.push(IN_PROGRESS_DRINK_ROUTE); });
+    expect(screen.getByRole('img', { name: /ícone de favoritar/i }).src).toContain(whiteHeartIcon);
+
+    await act(async () => { userEvent.click(screen.getByRole('img', { name: /ícone de favoritar/i })); });
+
+    expect(screen.getByRole('img', { name: /ícone de favoritar/i }).src).toContain(blackHeartIcon);
+    expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(1);
+    expect(JSON.parse(localStorage.getItem('favoriteRecipes'))[0]).toEqual(FAVORITE_DRINK_MOCK);
   });
 
-  // it('Testa se componente Card renderiza recomendações', async () => {
-  //   api.getRecipes.mockResolvedValue(drinks);
-  //   await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals/52771/in-progress'] }); });
+  it('Testa se componente Card renderiza recomendações de Meals', async () => {
+    api.getRecipes.mockResolvedValueOnce(drinks);
+    api.getRecipeDetails.mockResolvedValueOnce(oneMeal);
 
-  //   expect(await screen.findByTestId('0-recommendation-card')).toBeInTheDocument();
-  //   expect(await screen.findByTestId('1-recommendation-card')).toBeInTheDocument();
-  // });
+    await act(async () => { renderWithRouter(<App />, IN_PROGRESS_MEAL_ROUTE); });
+
+    for (let i = 0; i < 6; i += 1) {
+      expect(screen.getByTestId(`${i}-recommendation-card`)).toBeInTheDocument();
+    }
+
+    const recipePhoto = screen.getByTestId('recipe-photo');
+    expect(recipePhoto).toBeInTheDocument();
+    expect(recipePhoto.src).toBe(oneMeal.meals[0].strMealThumb);
+
+    const recipeTitle = screen.getByTestId('recipe-title');
+    expect(recipeTitle).toBeInTheDocument();
+    expect(recipeTitle.innerHTML).toBe(oneMeal.meals[0].strMeal);
+
+    const recipeCategory = screen.getByTestId('recipe-category');
+    expect(recipeCategory).toBeInTheDocument();
+    expect(recipeCategory.innerHTML).toBe(oneMeal.meals[0].strCategory);
+  });
+
+  it('Testa se componente Card renderiza recomendações de Drinks', async () => {
+    api.getRecipes.mockResolvedValueOnce(meals);
+    api.getRecipeDetails.mockResolvedValueOnce(oneDrink);
+    await act(async () => { renderWithRouter(<App />, IN_PROGRESS_DRINK_ROUTE); });
+
+    for (let i = 0; i < 6; i += 1) {
+      expect(screen.getByTestId(`${i}-recommendation-card`)).toBeInTheDocument();
+    }
+
+    const recipePhoto = screen.getByTestId('recipe-photo');
+    expect(recipePhoto).toBeInTheDocument();
+    expect(recipePhoto.src).toBe(oneDrink.drinks[0].strDrinkThumb);
+
+    const recipeTitle = screen.getByTestId('recipe-title');
+    expect(recipeTitle).toBeInTheDocument();
+    expect(recipeTitle.innerHTML).toBe(oneDrink.drinks[0].strDrink);
+
+    const recipeCategory = screen.getByTestId('recipe-category');
+    expect(recipeCategory).toBeInTheDocument();
+    expect(recipeCategory.innerHTML).toBe(oneDrink.drinks[0].strAlcoholic);
+  });
+
+  it('Testa botão de finalizar receita', async () => {
+    /*
+      [ ] 1. se botão existe
+      [ ] 2. se é do tipo button
+      [ ] 3. se começa desabilitado
+      [ ] 4. se é habilitado apenas quando todas checkbox estiverem marcadas
+      [ ] 5. se redireciona para 'done-recipes' quando clicado
+      [ ] 6. se adiciona receita ao localStorage
+    */
+  });
 });

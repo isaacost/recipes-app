@@ -18,16 +18,10 @@ const FIRST_LETTER_SEARCH_RADIO = 'first-letter-search-radio';
 const EXEC_SEARCH_BTN = 'exec-search-btn';
 
 describe('Testando component SearchBar', () => {
-  // beforeEach(() => {
-  //   global.fetch = jest.fn(async () => Promise.resolve({
-  //     json: async () => Promise.resolve(meals),
-  //   }));
-  // });
-
   it('Testa se todos inputs existem na tela', async () => {
     api.getRecipes.mockResolvedValue(meals);
     api.getRecipesCategories.mockResolvedValue(mealCategories);
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
 
@@ -43,7 +37,7 @@ describe('Testando component SearchBar', () => {
   it('Testa se botão de pesquisa existe na tela', async () => {
     api.getRecipes.mockResolvedValue(meals);
     api.getRecipesCategories.mockResolvedValue(mealCategories);
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
 
@@ -56,7 +50,7 @@ describe('Testando component SearchBar', () => {
     api.getRecipes.mockResolvedValue(meals);
     api.getRecipesCategories.mockResolvedValue(mealCategories);
     api.getRecipesByIngredient.mockResolvedValue(mealsByIngredient);
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
     userEvent.click(screen.getByTestId('ingredient-search-radio'));
@@ -72,7 +66,7 @@ describe('Testando component SearchBar', () => {
     api.getRecipesCategories.mockResolvedValue(mealCategories);
     api.getRecipesByName.mockResolvedValue(oneMeal);
     api.getRecipeDetails.mockResolvedValue(oneMeal);
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
     userEvent.click(screen.getByTestId('name-search-radio'));
@@ -88,7 +82,7 @@ describe('Testando component SearchBar', () => {
     api.getRecipes.mockResolvedValue(meals);
     api.getRecipesCategories.mockResolvedValue(mealCategories);
     api.getRecipesByFirstLetter.mockResolvedValue(firstLetterMock);
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
     userEvent.click(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO));
