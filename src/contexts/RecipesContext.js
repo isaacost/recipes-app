@@ -16,6 +16,7 @@ export const RecipesContext = createContext();
 const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
 
 export function RecipesProvider({ children }) {
+  const history = useHistory();
   const [filteredRecipesList, setFilteredRecipesList] = useState([]);
   const [searchFor, setSearchFor] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -26,10 +27,9 @@ export function RecipesProvider({ children }) {
   const [recipeDetails, setRecipeDetails] = useState({});
   const [usedIngredients, setUsedIngredients] = useState([]);
 
-  const history = useHistory();
   const { pathname } = history.location;
-  const recipeType = pathname.split('/')[1];
   const recipeId = pathname.split('/')[2];
+  const recipeType = history.location.pathname.split('/')[1];
   const type = recipeType === 'meals' ? 'Meal' : 'Drink';
 
   const ingredientsList = Object
@@ -41,6 +41,8 @@ export function RecipesProvider({ children }) {
     .entries(recipeDetails)
     .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ')
     .map((item) => item[1]);
+
+  const getRecipeType = () => history.location.pathname.split('/')[1];
 
   useEffect(() => {
     const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
@@ -152,6 +154,7 @@ export function RecipesProvider({ children }) {
     measureList,
     usedIngredients,
     setUsedIngredients,
+    getRecipeType,
   }), [
     searchFor,
     setSearchFor,
@@ -175,6 +178,7 @@ export function RecipesProvider({ children }) {
     measureList,
     usedIngredients,
     setUsedIngredients,
+    getRecipeType,
   ]);
 
   return (

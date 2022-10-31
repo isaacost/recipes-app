@@ -19,16 +19,11 @@ export default function FavoriteButton() {
       id: recipeDetails[`id${type}`],
       type: recipeType.replace('s', ''),
       nationality: recipeDetails.strArea || '',
-      category: recipeDetails.strCategory || '',
+      category: recipeDetails.strCategory,
       alcoholicOrNot: recipeDetails.strAlcoholic || '',
       name: recipeDetails[`str${type}`],
       image: recipeDetails[`str${type}Thumb`],
     };
-
-    if (!localFavoriteRecipes) {
-      localStorage.setItem('favoriteRecipes', JSON.stringify([newFavoriteRecipe]));
-      return setFavoriteRecipes([newFavoriteRecipe]);
-    }
 
     let newLocalFavoriteRecipes = localFavoriteRecipes
       .filter((recipe) => recipe.id !== recipeDetails[`id${type}`]);

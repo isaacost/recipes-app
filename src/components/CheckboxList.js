@@ -12,12 +12,11 @@ export default function CheckboxList() {
     usedIngredients,
     setUsedIngredients,
   } = useContext(RecipesContext);
-  // const [usedIngredients, setUsedIngredients] = useState([]);
+
   const lineStyles = 'line-through solid rgb(0, 0, 0)';
 
   useEffect(() => {
     const newInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
-
     if (newInProgressRecipes && newInProgressRecipes[recipeType][recipeId]) {
       setUsedIngredients(newInProgressRecipes[recipeType][recipeId]);
     }

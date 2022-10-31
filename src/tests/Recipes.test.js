@@ -17,7 +17,7 @@ describe('Testando componente Recipes', () => {
     api.getRecipesCategories.mockResolvedValue(mealCategories);
     api.getRecipesByCategory.mockResolvedValue(beefMeals);
 
-    await act(async () => { renderWithRouter(<App />, { initialEntries: ['/meals'] }); });
+    await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     expect(api.getRecipes).toHaveBeenCalled();
     expect(api.getRecipesCategories).toHaveBeenCalled();
