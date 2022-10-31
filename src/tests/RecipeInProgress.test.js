@@ -146,14 +146,53 @@ describe('Testando componente RecipeInProgress', () => {
     expect(recipeCategory.innerHTML).toBe(oneDrink.drinks[0].strAlcoholic);
   });
 
-  it('Testa botão de finalizar receita', async () => {
-    /*
-      [ ] 1. se botão existe
-      [ ] 2. se é do tipo button
-      [ ] 3. se começa desabilitado
-      [ ] 4. se é habilitado apenas quando todas checkbox estiverem marcadas
-      [ ] 5. se redireciona para 'done-recipes' quando clicado
-      [ ] 6. se adiciona receita ao localStorage
-    */
+  it('Testa botão de finalizar receita de comida', async () => {
+    api.getRecipes.mockResolvedValueOnce(drinks);
+    api.getRecipeDetails.mockResolvedValueOnce(oneMeal);
+
+    await act(async () => { renderWithRouter(<App />, IN_PROGRESS_MEAL_ROUTE); });
+
+    const finishRecipeButton = screen.getByTestId('finish-recipe-btn');
+    expect(finishRecipeButton).toBeInTheDocument();
+    expect(finishRecipeButton.type).toBe('button');
+    expect(finishRecipeButton.disabled).toBe(true);
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    checkboxes.forEach((checkbox) => {
+      userEvent.click(checkbox);
+    });
+
+    expect(finishRecipeButton.disabled).toBe(false);
+
+    userEvent.click(finishRecipeButton);
+
+    expect(window.location.pathname).toBe('/done-recipes');
+    expect(JSON.parse(localStorage.getItem('doneRecipes')).length).toBe(1);
+  });
+
+  it('Testa botão de finalizar receita de bebida', async () => {
+    api.getRecipes.mockResolvedValueOnce(meals);
+    api.getRecipeDetails.mockResolvedValueOnce(oneDrink);
+
+    await act(async () => {
+      renderWithRouter(<App />, IN_PROGRESS_DRINK_ROUTE);
+    });
+
+    const finishRecipeButton = screen.getByTestId('finish-recipe-btn');
+    expect(finishRecipeButton).toBeInTheDocument();
+    expect(finishRecipeButton.type).toBe('button');
+    expect(finishRecipeButton.disabled).toBe(true);
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    checkboxes.forEach((checkbox) => {
+      userEvent.click(checkbox);
+    });
+
+    expect(finishRecipeButton.disabled).toBe(false);
+
+    userEvent.click(finishRecipeButton);
+
+    expect(window.location.pathname).toBe('/done-recipes');
+    expect(JSON.parse(localStorage.getItem('doneRecipes')).length).toBe(2);
   });
 });

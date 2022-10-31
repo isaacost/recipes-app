@@ -37,7 +37,7 @@ export default function RecipeInProgress() {
       id: recipeDetails[`id${type}`],
       type: recipeType.replace('s', ''),
       nationality: recipeDetails.strArea || '',
-      category: recipeDetails.strCategory || '',
+      category: recipeDetails.strCategory,
       alcoholicOrNot: recipeDetails.strAlcoholic || '',
       name: recipeDetails[`str${type}`],
       image: recipeDetails[`str${type}Thumb`],
