@@ -17,6 +17,7 @@ export default function CheckboxList() {
 
   useEffect(() => {
     const newInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+
     if (newInProgressRecipes && newInProgressRecipes[recipeType][recipeId]) {
       setUsedIngredients(newInProgressRecipes[recipeType][recipeId]);
     }
@@ -37,13 +38,24 @@ export default function CheckboxList() {
     }
 
     setUsedIngredients([...newUsedIngredients]);
-    localStorage.setItem('inProgressRecipes', JSON.stringify(
-      {
-        [recipeType]: {
-          [recipeId]: [...newUsedIngredients],
-        },
+
+    let localInProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    localInProgressRecipes = {
+      ...localInProgressRecipes,
+      [recipeType]: {
+        [recipeId]: [...newUsedIngredients],
       },
-    ));
+    };
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(localInProgressRecipes));
+
+    // localStorage.setItem('inProgressRecipes', JSON.stringify(
+    //   {
+    //     [recipeType]: {
+    //       [recipeId]: [...newUsedIngredients],
+    //     },
+    //   },
+    // ));
   };
 
   return (

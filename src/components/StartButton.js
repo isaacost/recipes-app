@@ -11,6 +11,8 @@ export default function StartButton() {
   } = useContext(RecipesContext);
   const history = useHistory();
 
+  console.log(inProgressRecipes);
+
   return (
     <div>
       {doneRecipes.every((recipe) => recipe.id !== recipeId) && (
