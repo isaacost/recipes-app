@@ -17,14 +17,7 @@ function CardDoneRecipes({ recipe, index }) {
         alt="Imagem da receita"
         data-testid={ `${index}-horizontal-image` }
       />
-      <ShareButton index={ index } />
-      {/* <img
-        src={ shareIcon }
-        alt="Botão compartilhar"
-        data-testid={ `${index}-horizontal-share-btn` }
-        onClick={ () => copiedToClipBoard() }
-        aria-hidden="true"
-      /> */}
+      <ShareButton index={ index } recipe={ recipe } />
       <p data-testid={ `${index}-${recipe.tags[0]}-horizontal-tag` }>
         {recipe.tags[0]}
       </p>

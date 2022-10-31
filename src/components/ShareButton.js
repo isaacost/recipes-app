@@ -1,15 +1,20 @@
-import { number } from 'prop-types';
+import { number, shape } from 'prop-types';
 import React, { useState } from 'react';
 import shareIcon from '../images/shareIcon.svg';
 
 const ONE_SEC = 1000;
 const copy = require('clipboard-copy');
 
-export default function ShareButton({ index }) {
+export default function ShareButton({ index, recipe }) {
   const [isLinkCopied, setIsLinkCopied] = useState(false);
 
   const handleShareButton = () => {
-    copy(window.location.href.replace('/in-progress', ''));
+    if (recipe) {
+      const url = window.location.href.replace('/done-recipes', '');
+      copy(`${url}/${recipe.type}s/${recipe.id}`);
+    } else {
+      copy(window.location.href.replace('/in-progress', ''));
+    }
     setIsLinkCopied(true);
     setTimeout(() => setIsLinkCopied(false), ONE_SEC);
   };
@@ -35,4 +40,5 @@ export default function ShareButton({ index }) {
 
 ShareButton.propTypes = {
   index: number.isRequired,
+  recipe: shape({}).isRequired,
 };
