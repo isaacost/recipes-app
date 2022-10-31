@@ -11,6 +11,7 @@ export default function CheckboxList() {
     inProgressRecipes,
     usedIngredients,
     setUsedIngredients,
+    setDoneRecipes,
   } = useContext(RecipesContext);
 
   const lineStyles = 'line-through solid rgb(0, 0, 0)';
@@ -49,6 +50,7 @@ export default function CheckboxList() {
 
     localStorage.setItem('inProgressRecipes', JSON.stringify(localInProgressRecipes));
 
+    setDoneRecipes(localInProgressRecipes);
     // localStorage.setItem('inProgressRecipes', JSON.stringify(
     //   {
     //     [recipeType]: {
