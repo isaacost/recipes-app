@@ -66,4 +66,14 @@ describe('Testando componente FavoriteRecipes', () => {
     expect(copiedLinkElement).toBeInTheDocument();
     setTimeout(() => expect(copiedLinkElement).not.toBeInTheDocument(), 1000);
   });
+
+  it('Testa botão de favoritar', async () => {
+    localStorage.setItem('favoriteRecipes', JSON.stringify(LOCAL_FAVORITES_MOCK));
+    await act(async () => { renderWithRouter(<App />, '/favorite-recipes'); });
+
+    const favoriteButton = screen.getByTestId('0-horizontal-favorite-btn');
+    expect(favoriteButton).toBeInTheDocument();
+    userEvent.click(favoriteButton);
+    expect(JSON.parse(localStorage.getItem('favoriteRecipes')).length).toBe(1);
+  });
 });

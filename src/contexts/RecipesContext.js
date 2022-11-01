@@ -86,11 +86,12 @@ export function RecipesProvider({ children }) {
         searchInput,
         recipeType,
       );
-      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
 
       if (!newFilteredRecipesList) {
-        global.alert(ERROR_MESSAGE);
+        return global.alert(ERROR_MESSAGE);
       }
+
+      setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
 
     if (searchFor === 'name') {
@@ -100,8 +101,9 @@ export function RecipesProvider({ children }) {
       );
 
       if (!newFilteredRecipesList[recipeType]) return global.alert(ERROR_MESSAGE);
-      checkIfRecipeIsUnique(newFilteredRecipesList[recipeType] || []);
-      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
+
+      checkIfRecipeIsUnique(newFilteredRecipesList[recipeType]);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
 
     if (searchFor === 'firstLetter') {
@@ -111,7 +113,7 @@ export function RecipesProvider({ children }) {
       );
 
       if (!newFilteredRecipesList) return global.alert(ERROR_MESSAGE);
-      setFilteredRecipesList(newFilteredRecipesList[recipeType] || []);
+      setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
   }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
 
@@ -124,7 +126,6 @@ export function RecipesProvider({ children }) {
         return recipe[strRecipe] === filteredRecipesList[index][strRecipe];
       },
     )) {
-      console.log('called');
       const newRecipes = await getRecipes(categoryType);
       setFilteredRecipesList(newRecipes[recipeType]);
     } else {

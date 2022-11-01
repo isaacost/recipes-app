@@ -32,9 +32,23 @@ const DONE_RECIPE_MOCK = [
 ];
 
 describe('Testando componente RecipeDetails', () => {
-  it('Testando lista de ingredientes', async () => {
+  it.only('Testando lista de ingredientes', async () => {
     api.getRecipes.mockResolvedValue(meals);
     api.getRecipeDetails.mockResolvedValue(ONE_DRINK_MOCK);
+
+    // global.fetch = jest.fn(async (endpoint) => ({
+    //   json: async () => {
+    //     console.log(endpoint);
+    //     if (endpoint === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
+    //       return meals;
+    //     }
+
+    //     if (endpoint === 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=15997') {
+    //       return ONE_DRINK_MOCK;
+    //     }
+    //   },
+    // }));
+
     await act(async () => { renderWithRouter(<App />, '/drinks/15997'); });
 
     const listItems = screen.getAllByRole('listitem');
