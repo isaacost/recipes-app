@@ -10,6 +10,7 @@ import drinks from '../../cypress/mocks/drinks';
 import meals from '../../cypress/mocks/meals';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import oneDrink from '../../cypress/mocks/oneDrink';
+import ONE_DRINK_MOCK from './helpers/oneDrinkMock';
 
 jest.mock('../services/recipesAPI');
 jest.mock('clipboard-copy', () => jest.fn());
@@ -38,6 +39,15 @@ const FAVORITE_DRINK_MOCK = {
 
 const IN_PROGRESS_MEAL_ROUTE = '/meals/52771/in-progress';
 const IN_PROGRESS_DRINK_ROUTE = '/drinks/178319/in-progress';
+
+const IN_PROGRESS_LOCAL_MOCK = {
+  drinks: {
+    15997: [
+      'Galliano',
+    ],
+  },
+  meals: {},
+};
 
 describe('Testando componente RecipeInProgress', () => {
   it('Testa botão de compartilhar', async () => {
@@ -194,5 +204,24 @@ describe('Testando componente RecipeInProgress', () => {
 
     expect(window.location.pathname).toBe('/done-recipes');
     expect(JSON.parse(localStorage.getItem('doneRecipes')).length).toBe(2);
+  });
+
+  it('Testa checkbox quando inicializa', async () => {
+    api.getRecipes.mockResolvedValueOnce(meals);
+    api.getRecipeDetails.mockResolvedValueOnce(ONE_DRINK_MOCK);
+
+    localStorage.setItem('inProgressRecipes', JSON.stringify(IN_PROGRESS_LOCAL_MOCK));
+    await act(async () => { renderWithRouter(<App />, '/drinks/15997/in-progress'); });
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes[0].checked).toBe(true);
+    expect(checkboxes[0].parentElement.textContent).toBe('2 1/2 shots  Galliano');
+    expect(checkboxes[1].checked).toBe(false);
+
+    userEvent.click(checkboxes[1]);
+    expect(checkboxes[1].parentElement.style.textDecoration).toBe('line-through solid rgb(0, 0, 0)');
+    userEvent.click(checkboxes[1]);
+    expect(checkboxes[1].parentElement.style.textDecoration).toBe('');
+    expect(checkboxes[1].parentElement.textContent).toBe(' Ginger ale');
   });
 });

@@ -5,9 +5,12 @@ import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
 import mealsByIngredient from '../../cypress/mocks/mealsByIngredient';
 import oneMeal from '../../cypress/mocks/oneMeal';
+import oneDrink from '../../cypress/mocks/oneDrink';
 import meals from '../../cypress/mocks/meals';
+import drinks from '../../cypress/mocks/drinks';
 import firstLetterMock from './helpers/firstLetterMock';
 import mealCategories from '../../cypress/mocks/mealCategories';
+import drinkCategories from '../../cypress/mocks/drinkCategories';
 import * as api from '../services/recipesAPI';
 
 jest.mock('../services/recipesAPI');
@@ -91,5 +94,79 @@ describe('Testando component SearchBar', () => {
 
     expect(api.getRecipesByFirstLetter).toHaveBeenCalled();
     expect(screen.getByRole('img', { name: /apple frangipan tart/i })).toBeInTheDocument();
+  });
+
+  it('Testa se redireciona para detalhes da receita', async () => {
+    api.getRecipes.mockResolvedValue(drinks);
+    api.getRecipesCategories.mockResolvedValue(drinkCategories);
+    api.getRecipesByName.mockResolvedValue(oneDrink);
+    api.getRecipeDetails.mockResolvedValue(oneDrink);
+    await act(async () => { renderWithRouter(<App />, '/drinks'); });
+
+    userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
+    userEvent.click(screen.getByTestId('name-search-radio'));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Aquamarine');
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
+
+    expect(screen.getByRole('img', { name: /aquamarine/i })).toBeInTheDocument();
+  });
+
+  it('Testa se alerta é chamado quando pesquisa por ingrediente', async () => {
+    api.getRecipes.mockResolvedValue(drinks);
+    api.getRecipesCategories.mockResolvedValue(drinkCategories);
+    api.getRecipeDetails.mockResolvedValue(oneDrink);
+
+    api.getRecipesByIngredient.mockResolvedValue(undefined);
+    global.alert = jest.fn();
+
+    await act(async () => { renderWithRouter(<App />, '/drinks'); });
+
+    userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
+    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Test');
+
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
+
+    expect(global.alert).toHaveBeenCalled();
+    expect(api.getRecipes).toHaveBeenCalled();
+    expect(api.getRecipesCategories).toHaveBeenCalled();
+    expect(api.getRecipesByIngredient).toHaveBeenCalled();
+  });
+
+  it('Testa se alerta é chamado quando pesquisa por nome', async () => {
+    api.getRecipes.mockResolvedValue(drinks);
+    api.getRecipesCategories.mockResolvedValue(drinkCategories);
+    api.getRecipesByName.mockResolvedValue(null);
+
+    global.alert = jest.fn(() => 'Sorry, we haven\'t found any recipes for these filters.');
+
+    await act(async () => { renderWithRouter(<App />, '/drinks'); });
+
+    userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
+    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Test');
+
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
+
+    expect(global.alert).toHaveBeenCalled();
+    expect(global.alert).toHaveBeenCalledWith('Sorry, we haven\'t found any recipes for these filters.');
+  });
+
+  it('Testa se alerta é chamado quando pesquisa pela primeira letra', async () => {
+    api.getRecipes.mockResolvedValue(drinks);
+    api.getRecipesCategories.mockResolvedValue(drinkCategories);
+    api.getRecipesByFirstLetter.mockResolvedValue(undefined);
+
+    global.alert = jest.fn();
+
+    await act(async () => { renderWithRouter(<App />, '/drinks'); });
+
+    userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
+    userEvent.click(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Test');
+
+    await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
+
+    expect(global.alert).toHaveBeenCalled();
   });
 });
