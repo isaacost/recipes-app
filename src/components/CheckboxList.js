@@ -11,6 +11,7 @@ export default function CheckboxList() {
     inProgressRecipes,
     usedIngredients,
     setUsedIngredients,
+    setInProgressRecipes,
   } = useContext(RecipesContext);
 
   const lineStyles = 'line-through solid rgb(0, 0, 0)';
