@@ -11,7 +11,6 @@ export default function CheckboxList() {
     inProgressRecipes,
     usedIngredients,
     setUsedIngredients,
-    setDoneRecipes,
   } = useContext(RecipesContext);
 
   const lineStyles = 'line-through solid rgb(0, 0, 0)';
@@ -49,15 +48,6 @@ export default function CheckboxList() {
     };
 
     localStorage.setItem('inProgressRecipes', JSON.stringify(localInProgressRecipes));
-
-    setDoneRecipes(localInProgressRecipes);
-    // localStorage.setItem('inProgressRecipes', JSON.stringify(
-    //   {
-    //     [recipeType]: {
-    //       [recipeId]: [...newUsedIngredients],
-    //     },
-    //   },
-    // ));
   };
 
   return (
@@ -77,7 +67,9 @@ export default function CheckboxList() {
               checked={ usedIngredients?.includes(ingredient) }
               onChange={ (event) => handleChange(event, ingredient) }
             />
-            {`${measureList[index]} ${ingredient}`}
+            {`${measureList[index] !== undefined
+              ? measureList[index]
+              : ''} ${ingredient}`}
           </label>
         </li>
       ))}

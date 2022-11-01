@@ -26,6 +26,7 @@ export function RecipesProvider({ children }) {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [recipeDetails, setRecipeDetails] = useState({});
   const [usedIngredients, setUsedIngredients] = useState([]);
+  const [filterType, setFilterType] = useState('');
 
   const { pathname } = history.location;
   const recipeId = pathname.split('/')[2];
@@ -39,7 +40,7 @@ export function RecipesProvider({ children }) {
 
   const measureList = Object
     .entries(recipeDetails)
-    .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ')
+    .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ' && item[1])
     .map((item) => item[1]);
 
   const getRecipeType = () => history.location.pathname.split('/')[1];
@@ -142,6 +143,7 @@ export function RecipesProvider({ children }) {
     selectedItem,
     fetchRecipesByCategory,
     doneRecipes,
+    setDoneRecipes,
     inProgressRecipes,
     favoriteRecipes,
     setFavoriteRecipes,
@@ -155,6 +157,8 @@ export function RecipesProvider({ children }) {
     usedIngredients,
     setUsedIngredients,
     getRecipeType,
+    filterType,
+    setFilterType,
   }), [
     searchFor,
     setSearchFor,
@@ -166,6 +170,7 @@ export function RecipesProvider({ children }) {
     selectedItem,
     fetchRecipesByCategory,
     doneRecipes,
+    setDoneRecipes,
     inProgressRecipes,
     favoriteRecipes,
     setFavoriteRecipes,
@@ -179,6 +184,8 @@ export function RecipesProvider({ children }) {
     usedIngredients,
     setUsedIngredients,
     getRecipeType,
+    filterType,
+    setFilterType,
   ]);
 
   return (

@@ -14,7 +14,7 @@ export default function IngredientsList() {
           key={ index }
           data-testid={ `${index}-ingredient-name-and-measure` }
         >
-          {`${measureList[index]} ${ingredient}`}
+          {`${measureList[index] !== undefined ? measureList[index] : ''} ${ingredient}`}
         </li>
       ))}
     </ul>
