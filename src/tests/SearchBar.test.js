@@ -19,6 +19,7 @@ const SEARCH_INPUT = 'search-input';
 const INGREDIENT_SEARCH_RADIO = 'ingredient-search-radio';
 const FIRST_LETTER_SEARCH_RADIO = 'first-letter-search-radio';
 const EXEC_SEARCH_BTN = 'exec-search-btn';
+const NAME_SEARCH_RADIO = 'name-search-radio';
 
 describe('Testando component SearchBar', () => {
   it('Testa se todos inputs existem na tela', async () => {
@@ -33,7 +34,7 @@ describe('Testando component SearchBar', () => {
     expect(searchInput.value).toBe('');
 
     expect(screen.getByTestId(INGREDIENT_SEARCH_RADIO)).toBeInTheDocument();
-    expect(screen.getByTestId('name-search-radio')).toBeInTheDocument();
+    expect(screen.getByTestId(NAME_SEARCH_RADIO)).toBeInTheDocument();
     expect(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO)).toBeInTheDocument();
   });
 
@@ -56,7 +57,7 @@ describe('Testando component SearchBar', () => {
     await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.click(screen.getByTestId(INGREDIENT_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Chicken');
 
     await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
@@ -72,7 +73,7 @@ describe('Testando component SearchBar', () => {
     await act(async () => { renderWithRouter(<App />, '/meals'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-    userEvent.click(screen.getByTestId('name-search-radio'));
+    userEvent.click(screen.getByTestId(NAME_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Spicy Arrabiata Penne');
     await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
 
@@ -104,7 +105,7 @@ describe('Testando component SearchBar', () => {
     await act(async () => { renderWithRouter(<App />, '/drinks'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-    userEvent.click(screen.getByTestId('name-search-radio'));
+    userEvent.click(screen.getByTestId(NAME_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Aquamarine');
     await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
 
@@ -122,7 +123,7 @@ describe('Testando component SearchBar', () => {
     await act(async () => { renderWithRouter(<App />, '/drinks'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.click(screen.getByTestId(INGREDIENT_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Test');
 
     await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
@@ -143,7 +144,7 @@ describe('Testando component SearchBar', () => {
     await act(async () => { renderWithRouter(<App />, '/drinks'); });
 
     userEvent.click(screen.getByRole('button', { name: /searchicon/i }));
-    userEvent.click(screen.getByTestId('ingredient-search-radio'));
+    userEvent.click(screen.getByTestId(INGREDIENT_SEARCH_RADIO));
     userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Test');
 
     await act(async () => { userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN)); });
