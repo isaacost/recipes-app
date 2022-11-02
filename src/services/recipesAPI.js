@@ -1,22 +1,26 @@
-const NATIONALITIES_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?a=list';
-const INGREDIENTS_ENDPOINT = 'https://www.themealdb.com/api/json/v1/1/list.php?i=list';
+import { ENDPOINT } from '../constants/constants';
 
 export const getRecipes = async (recipeType) => {
-  const RECIPES_ENDPOINT = recipeType === 'meals'
-    ? 'https://www.themealdb.com/api/json/v1/1/search.php?s='
-    : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+  const endpoint = recipeType === 'meals'
+    ? ENDPOINT.MEALS_RECIPES
+    : ENDPOINT.DRINKS_RECIPES;
 
-  const response = await fetch(RECIPES_ENDPOINT);
-  return response.json();
+  try {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getRecipesByName = async (recipeName, recipeType) => {
-  const BY_NAME_ENDPOINT = recipeType === 'meals'
-    ? `https://www.themealdb.com/api/json/v1/1/search.php?s=${recipeName}`
-    : `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${recipeName}`;
+  const endpoint = recipeType === 'meals'
+    ? `${ENDPOINT.MEALS_RECIPES}${recipeName}`
+    : `${ENDPOINT.DRINKS_RECIPES}${recipeName}`;
 
   try {
-    const response = await fetch(BY_NAME_ENDPOINT);
+    const response = await fetch(endpoint);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -25,12 +29,12 @@ export const getRecipesByName = async (recipeName, recipeType) => {
 };
 
 export const getRecipesByIngredient = async (ingredientName, recipeType) => {
-  const BY_INGREDIENT_ENDPOINT = recipeType === 'meals'
-    ? `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredientName}`
-    : `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredientName}`;
+  const endpoint = recipeType === 'meals'
+    ? `${ENDPOINT.MEALS_BY_INGREDIENT}${ingredientName}`
+    : `${ENDPOINT.DRINKS_BY_INGREDIENT}${ingredientName}`;
 
   try {
-    const response = await fetch(BY_INGREDIENT_ENDPOINT);
+    const response = await fetch(endpoint);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -39,12 +43,12 @@ export const getRecipesByIngredient = async (ingredientName, recipeType) => {
 };
 
 export const getRecipesByFirstLetter = async (firstLetter, recipeType) => {
-  const BY_FIRST_LETTER_ENDPOINT = recipeType === 'meals'
-    ? `https://www.themealdb.com/api/json/v1/1/search.php?f=${firstLetter}`
-    : `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${firstLetter}`;
+  const endpoint = recipeType === 'meals'
+    ? `${ENDPOINT.MEALS_BY_FIRST_LETTER}${firstLetter}`
+    : `${ENDPOINT.DRINKS_BY_FIRST_LETTER}${firstLetter}`;
 
   try {
-    const response = await fetch(BY_FIRST_LETTER_ENDPOINT);
+    const response = await fetch(endpoint);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -53,45 +57,43 @@ export const getRecipesByFirstLetter = async (firstLetter, recipeType) => {
 };
 
 export const getRecipesCategories = async (categoryType) => {
-  const CATEGORIES_ENDPOINT = categoryType === 'meals'
-    ? 'https://www.themealdb.com/api/json/v1/1/list.php?c=list'
-    : 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
+  const endpoint = categoryType === 'meals'
+    ? ENDPOINT.MEALS_CATEGORIES
+    : ENDPOINT.DRINKS_CATEGORIES;
 
-  const response = await fetch(CATEGORIES_ENDPOINT);
-  const data = response.json();
-  return data;
+  try {
+    const response = await fetch(endpoint);
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getRecipesByCategory = async (categoryName, categoryType) => {
-  const BY_CATEGORY_ENDPOINT = categoryType === 'meals'
-    ? `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categoryName}`
-    : `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${categoryName}`;
+  const endpoint = categoryType === 'meals'
+    ? `${ENDPOINT.MEALS_BY_CATEGORY}${categoryName}`
+    : `${ENDPOINT.DRINKS_BY_CATEGORY}${categoryName}`;
 
-  const response = await fetch(BY_CATEGORY_ENDPOINT);
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getRecipeDetails = async (recipeId, recipeType) => {
-  const RECIPE_DETAILS_ENDPOINT = recipeType === 'meals'
-    ? `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`
-    : `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
+  const endpoint = recipeType === 'meals'
+    ? `${ENDPOINT.MEAL_DETAILS}${recipeId}`
+    : `${ENDPOINT.DRINK_DETAILS}${recipeId}`;
 
-  const response = await fetch(RECIPE_DETAILS_ENDPOINT);
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
-
-export const getNationalities = async () => {
-  const response = await fetch(NATIONALITIES_ENDPOINT);
-  const { meals } = await response.json();
-  return meals;
-};
-
-export const getIngredients = async () => {
-  const response = await fetch(INGREDIENTS_ENDPOINT);
-  const { meals } = await response.json();
-  return meals;
-};
-
-export const getIngredientImage = (ingredient) => `https://www.themealdb.com/images/ingredients/${ingredient}-Small.png`;

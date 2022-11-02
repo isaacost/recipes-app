@@ -7,6 +7,8 @@ jest.mock('clipboard-copy', () => jest.fn());
 
 const copy = require('clipboard-copy');
 
+const FAVORITE_RECIPES_ROUTE = '/favorite-recipes';
+
 const LOCAL_FAVORITES_MOCK = [
   {
     id: '52977',
@@ -31,7 +33,7 @@ const LOCAL_FAVORITES_MOCK = [
 describe('Testando componente FavoriteRecipes', () => {
   it('Testa botões de filtro', async () => {
     localStorage.setItem('favoriteRecipes', JSON.stringify(LOCAL_FAVORITES_MOCK));
-    await act(async () => { renderWithRouter(<App />, '/favorite-recipes'); });
+    await act(async () => { renderWithRouter(<App />, FAVORITE_RECIPES_ROUTE); });
 
     const filterAllButton = screen.getByTestId('filter-by-all-btn');
     const filterMealButton = screen.getByTestId('filter-by-meal-btn');
@@ -52,7 +54,7 @@ describe('Testando componente FavoriteRecipes', () => {
 
   it('Testa botão de compartilhar', async () => {
     localStorage.setItem('favoriteRecipes', JSON.stringify(LOCAL_FAVORITES_MOCK));
-    await act(async () => { renderWithRouter(<App />, '/favorite-recipes'); });
+    await act(async () => { renderWithRouter(<App />, FAVORITE_RECIPES_ROUTE); });
 
     copy.mockImplementation(() => null);
 
@@ -69,7 +71,7 @@ describe('Testando componente FavoriteRecipes', () => {
 
   it('Testa botão de favoritar', async () => {
     localStorage.setItem('favoriteRecipes', JSON.stringify(LOCAL_FAVORITES_MOCK));
-    await act(async () => { renderWithRouter(<App />, '/favorite-recipes'); });
+    await act(async () => { renderWithRouter(<App />, FAVORITE_RECIPES_ROUTE); });
 
     const favoriteButton = screen.getByTestId('0-horizontal-favorite-btn');
     expect(favoriteButton).toBeInTheDocument();

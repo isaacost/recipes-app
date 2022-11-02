@@ -1,12 +1,12 @@
 import { screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
+
 import App from '../App';
 import ONE_DRINK_MOCK from './helpers/oneDrinkMock';
 import meals from '../../cypress/mocks/meals';
-import * as api from '../services/recipesAPI';
-
-jest.mock('../services/recipesAPI');
+import { ENDPOINT } from '../constants/constants';
+import DONE_RECIPE_MOCK from './helpers/doneRecipeMock';
 
 const IN_PROGRESS_LOCAL_MOCK = {
   drinks: {
@@ -17,39 +17,21 @@ const IN_PROGRESS_LOCAL_MOCK = {
   meals: {},
 };
 
-const DONE_RECIPE_MOCK = [
-  {
-    id: '15997',
-    type: 'drink',
-    nationality: '',
-    category: 'Ordinary Drink',
-    alcoholicOrNot: 'Optional alcohol',
-    name: 'GG',
-    image: 'https://www.thecocktaildb.com/images/media/drink/vyxwut1468875960.jpg',
-    doneDate: '2022-11-01T21:36:01.933Z',
-    tags: [],
-  },
-];
+const DRINK_ROUTE = '/drinks/15997';
+const START_RECIPE_BUTTON_TESTID = 'start-recipe-btn';
 
 describe('Testando componente RecipeDetails', () => {
-  it.only('Testando lista de ingredientes', async () => {
-    api.getRecipes.mockResolvedValue(meals);
-    api.getRecipeDetails.mockResolvedValue(ONE_DRINK_MOCK);
+  beforeEach(() => {
+    global.fetch = jest.fn(async (endpoint) => ({
+      json: async () => {
+        if (endpoint === ENDPOINT.MEALS_RECIPES) return meals;
+        if (endpoint === `${ENDPOINT.DRINK_DETAILS}15997`) return ONE_DRINK_MOCK;
+      },
+    }));
+  });
 
-    // global.fetch = jest.fn(async (endpoint) => ({
-    //   json: async () => {
-    //     console.log(endpoint);
-    //     if (endpoint === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
-    //       return meals;
-    //     }
-
-    //     if (endpoint === 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=15997') {
-    //       return ONE_DRINK_MOCK;
-    //     }
-    //   },
-    // }));
-
-    await act(async () => { renderWithRouter(<App />, '/drinks/15997'); });
+  it('Testando lista de ingredientes', async () => {
+    await act(async () => { renderWithRouter(<App />, DRINK_ROUTE); });
 
     const listItems = screen.getAllByRole('listitem');
     expect(listItems.length).toBe(3);
@@ -58,16 +40,13 @@ describe('Testando componente RecipeDetails', () => {
   });
 
   it('Testa botão de iniciar receita', async () => {
-    api.getRecipes.mockResolvedValue(meals);
-    api.getRecipeDetails.mockResolvedValue(ONE_DRINK_MOCK);
-
     let history;
     await act(async () => {
-      const { history: h } = renderWithRouter(<App />, '/drinks/15997');
+      const { history: h } = renderWithRouter(<App />, DRINK_ROUTE);
       history = h;
     });
 
-    const startButton = screen.getByTestId('start-recipe-btn');
+    const startButton = screen.getByTestId(START_RECIPE_BUTTON_TESTID);
     expect(startButton).toBeInTheDocument();
     expect(startButton.textContent).toBe('Start Recipe');
     await act(async () => userEvent.click(startButton));
@@ -75,27 +54,15 @@ describe('Testando componente RecipeDetails', () => {
   });
 
   it('Testa botão de iniciar receita', async () => {
-    api.getRecipes.mockResolvedValue(meals);
-    api.getRecipeDetails.mockResolvedValue(ONE_DRINK_MOCK);
-
     localStorage.setItem('inProgressRecipes', JSON.stringify(IN_PROGRESS_LOCAL_MOCK));
-    await act(async () => {
-      renderWithRouter(<App />, '/drinks/15997');
-    });
-
-    const startButton = screen.getByTestId('start-recipe-btn');
+    await act(async () => { renderWithRouter(<App />, DRINK_ROUTE); });
+    const startButton = screen.getByTestId(START_RECIPE_BUTTON_TESTID);
     expect(startButton.textContent).toBe('Continue Recipe');
   });
 
   it('Testa se botão de iniciar receita não aparece na tela', async () => {
-    api.getRecipes.mockResolvedValue(meals);
-    api.getRecipeDetails.mockResolvedValue(ONE_DRINK_MOCK);
-
     localStorage.setItem('doneRecipes', JSON.stringify(DONE_RECIPE_MOCK));
-    await act(async () => {
-      renderWithRouter(<App />, '/drinks/15997');
-    });
-
-    expect(screen.queryByTestId('start-recipe-btn')).toBe(null);
+    await act(async () => { renderWithRouter(<App />, DRINK_ROUTE); });
+    expect(screen.queryByTestId(START_RECIPE_BUTTON_TESTID)).toBe(null);
   });
 });

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useMemo, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { node } from 'prop-types';
@@ -43,8 +42,6 @@ export function RecipesProvider({ children }) {
     .filter((item) => item[0].includes('strMeasure') && item[1] !== ' ' && item[1])
     .map((item) => item[1]);
 
-  const getRecipeType = () => history.location.pathname.split('/')[1];
-
   useEffect(() => {
     const localDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes'));
     if (!localDoneRecipes) {
@@ -78,7 +75,7 @@ export function RecipesProvider({ children }) {
       history.push(`${pathname}/${newFilteredRecipesList[0].idDrink}`);
       setSelectedItem(newFilteredRecipesList[0]);
     }
-  }, [history]);
+  }, [history, pathname]);
 
   const searchMeals = useCallback(async () => {
     if (searchFor === 'ingredients') {
@@ -115,7 +112,7 @@ export function RecipesProvider({ children }) {
       if (!newFilteredRecipesList) return global.alert(ERROR_MESSAGE);
       setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
-  }, [searchFor, searchInput, history, checkIfRecipeIsUnique]);
+  }, [searchFor, searchInput, checkIfRecipeIsUnique, recipeType]);
 
   const fetchRecipesByCategory = useMemo(() => async (categoryName, categoryType) => {
     const newFilteredRecipesList = await getRecipesByCategory(categoryName, categoryType);
@@ -131,7 +128,7 @@ export function RecipesProvider({ children }) {
     } else {
       setFilteredRecipesList(newFilteredRecipesList[recipeType]);
     }
-  }, [filteredRecipesList]);
+  }, [filteredRecipesList, recipeType]);
 
   const value = useMemo(() => ({
     searchFor,
@@ -158,7 +155,6 @@ export function RecipesProvider({ children }) {
     measureList,
     usedIngredients,
     setUsedIngredients,
-    getRecipeType,
     filterType,
     setFilterType,
   }), [
@@ -186,7 +182,6 @@ export function RecipesProvider({ children }) {
     measureList,
     usedIngredients,
     setUsedIngredients,
-    getRecipeType,
     filterType,
     setFilterType,
   ]);

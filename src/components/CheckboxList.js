@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect } from 'react';
 import { RecipesContext } from '../contexts/RecipesContext';
 
@@ -21,7 +20,7 @@ export default function CheckboxList() {
     if (newInProgressRecipes && newInProgressRecipes[recipeType][recipeId]) {
       setUsedIngredients(newInProgressRecipes[recipeType][recipeId]);
     }
-  }, [inProgressRecipes, recipeId, recipeType]);
+  }, [inProgressRecipes, recipeId, recipeType, setUsedIngredients]);
 
   const handleChange = ({ target }, selectedIngredient) => {
     if (target.checked) {
