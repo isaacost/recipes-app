@@ -16,7 +16,7 @@ export default function DoneRecipes() {
       <Header title="Done Recipes" />
       <FilterButtons />
 
-      <div>
+      <div className="grid gap-4">
         { doneRecipes?.filter((recipe) => recipe.type.includes(filterType))
           .map((recipe, index) => (
             <SimpleCard key={ recipe.id } recipe={ recipe } index={ index } />

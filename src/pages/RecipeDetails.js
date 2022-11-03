@@ -26,8 +26,6 @@ export default function RecipeDetails() {
 
   return (
     <div>
-      <ShareButton />
-      <FavoriteButton />
       <Card />
       <StartButton />
     </div>

@@ -12,12 +12,13 @@ export default function StartButton() {
   const history = useHistory();
 
   return (
-    <div>
+    <div className="mx-auto w-[80%]">
       {doneRecipes.every((recipe) => recipe.id !== recipeId) && (
         <button
           type="button"
           data-testid="start-recipe-btn"
-          style={ { bottom: '0px', position: 'fixed' } }
+          className={ `my-10 bg-amber-400 text-purple-800 font-bold p-2 
+          rounded w-full hover:bg-amber-300` }
           onClick={ () => history.push(`/${recipeType}/${recipeId}/in-progress`) }
         >
           {Object.keys(inProgressRecipes[recipeType])

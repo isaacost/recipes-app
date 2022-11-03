@@ -41,7 +41,7 @@ export default function RecipeInProgress() {
       alcoholicOrNot: recipeDetails.strAlcoholic || '',
       name: recipeDetails[`str${type}`],
       image: recipeDetails[`str${type}Thumb`],
-      doneDate: new Date().toISOString(),
+      doneDate: new Date().toLocaleString('pt-br'),
       tags: recipeDetails.strTags?.split(',') || [],
     };
 
@@ -53,18 +53,20 @@ export default function RecipeInProgress() {
 
   return (
     <div>
-      <ShareButton />
-      <FavoriteButton />
       <Card />
 
-      <button
-        type="button"
-        data-testid="finish-recipe-btn"
-        disabled={ usedIngredients.length !== ingredientsList.length }
-        onClick={ markRecipeDone }
-      >
-        Finish Recipe
-      </button>
+      <div className="mx-auto w-[80%]">
+        <button
+          type="button"
+          data-testid="finish-recipe-btn"
+          disabled={ usedIngredients.length !== ingredientsList.length }
+          onClick={ markRecipeDone }
+          className={ `my-10 bg-amber-400 text-purple-800 font-bold p-2 
+        rounded w-full hover:bg-amber-300 disabled:bg-slate-400 disabled:text-white` }
+        >
+          Finish Recipe
+        </button>
+      </div>
     </div>
   );
 }
