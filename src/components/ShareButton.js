@@ -1,7 +1,7 @@
 import { number, shape } from 'prop-types';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import shareIcon from '../images/shareIcon.svg';
+import shareIcon from '../images/share-icon.png';
 
 const ONE_SEC = 1000;
 const copy = require('clipboard-copy');

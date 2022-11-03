@@ -8,7 +8,7 @@ export default function Drinks() {
   const { filteredRecipesList } = useContext(RecipesContext);
 
   return (
-    <div>
+    <div className="grid grid-cols-2 gap-2 px-2">
       {filteredRecipesList?.reduce((acc, recipe, index) => {
         if (index < MAX_RECIPES_LENGTH) acc.push(recipe);
         return acc;
@@ -17,13 +17,23 @@ export default function Drinks() {
           to={ `/drinks/${recipe.idDrink}` }
           key={ recipe.idDrink }
         >
-          <div data-testid={ `${index}-recipe-card` }>
+          <div
+            className="max-w-xs border border-purple-300 rounded opacity-90
+            hover:opacity-100 transition-all hover:shadow-md"
+            data-testid={ `${index}-recipe-card` }
+          >
             <img
               src={ recipe.strDrinkThumb }
               alt={ recipe.strDrink }
               data-testid={ `${index}-card-img` }
+              className="w-full"
             />
-            <h2 data-testid={ `${index}-card-name` }>{recipe.strDrink}</h2>
+            <h2
+              className="p-2"
+              data-testid={ `${index}-card-name` }
+            >
+              {recipe.strDrink}
+            </h2>
           </div>
         </Link>
       ))}

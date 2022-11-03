@@ -16,7 +16,7 @@ export default function FavoriteRecipes() {
       <Header title="Favorite Recipes" />
       <FilterButtons />
 
-      <div>
+      <div className="grid gap-4">
         { favoriteRecipes?.filter((recipe) => recipe.type.includes(filterType))
           .map((recipe, index) => (
             <SimpleCard key={ recipe.id } recipe={ recipe } index={ index } />

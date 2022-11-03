@@ -50,28 +50,32 @@ export default function CheckboxList() {
   };
 
   return (
-    <ul>
-      {ingredientsList.map((ingredient, index) => (
-        <li key={ index }>
-          <label
-            htmlFor={ ingredient }
-            data-testid={ `${index}-ingredient-step` }
-            style={ { textDecoration: usedIngredients
-              ?.includes(ingredient) && lineStyles } }
-          >
-            <input
-              type="checkbox"
-              id={ ingredient }
-              value={ ingredient }
-              checked={ usedIngredients?.includes(ingredient) }
-              onChange={ (event) => handleChange(event, ingredient) }
-            />
-            {`${measureList[index] !== undefined
-              ? measureList[index]
-              : ''} ${ingredient}`}
-          </label>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h3 className="font-bold text-xl mb-4">Ingredients: </h3>
+      <ul className="border p-4 rounded">
+        {ingredientsList.map((ingredient, index) => (
+          <li key={ index }>
+            <label
+              htmlFor={ ingredient }
+              data-testid={ `${index}-ingredient-step` }
+              style={ { textDecoration: usedIngredients
+                ?.includes(ingredient) && lineStyles } }
+            >
+              <input
+                type="checkbox"
+                id={ ingredient }
+                value={ ingredient }
+                checked={ usedIngredients?.includes(ingredient) }
+                onChange={ (event) => handleChange(event, ingredient) }
+                className="mr-2"
+              />
+              {`${measureList[index] !== undefined
+                ? measureList[index]
+                : ''} ${ingredient}`}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

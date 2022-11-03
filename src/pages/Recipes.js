@@ -8,6 +8,8 @@ import Meals from './Meals';
 import { getRecipes, getRecipesCategories } from '../services/recipesAPI';
 import { RecipesContext } from '../contexts/RecipesContext';
 
+import beefImg from '../images/beef.png';
+
 const MAX_CATEGORIES_LENGTH = 5;
 
 export default function Recipes({ title }) {
@@ -44,7 +46,7 @@ export default function Recipes({ title }) {
       <Header title={ title } />
 
       <main>
-        <div>
+        <div className="grid grid-cols-3 gap-2 my-4 px-2">
           {
             categoriesList
               .filter((_, index) => index < MAX_CATEGORIES_LENGTH)
@@ -54,6 +56,8 @@ export default function Recipes({ title }) {
                   data-testid={ `${strCategory}-category-filter` }
                   type="button"
                   onClick={ () => fetchRecipesByCategory(strCategory, recipeType) }
+                  className={ `bg-purple-800 text-amber-200 font-bold py-2 px-4 
+                  rounded-full` }
                 >
                   {strCategory}
                 </button>
@@ -64,6 +68,7 @@ export default function Recipes({ title }) {
             type="button"
             data-testid="All-category-filter"
             onClick={ resetRecipes }
+            className="bg-purple-600 text-amber-200 font-bold py-2 px-4 rounded-full"
           >
             All
           </button>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
+import favoriteIcon from '../images/favorite-icon.png';
+import unfavoriteIcon from '../images/unfavorite-icon.png';
 import { RecipesContext } from '../contexts/RecipesContext';
 
 export default function FavoriteButton() {
@@ -48,8 +48,8 @@ export default function FavoriteButton() {
           data-testid="favorite-btn"
           src={ favoriteRecipes
             .some((recipe) => recipe.id === recipeDetails[`id${type}`])
-            ? blackHeartIcon
-            : whiteHeartIcon }
+            ? unfavoriteIcon
+            : favoriteIcon }
           alt="ícone de favoritar"
         />
       </button>

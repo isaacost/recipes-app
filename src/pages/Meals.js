@@ -8,7 +8,7 @@ export default function Meals() {
   const { filteredRecipesList } = useContext(RecipesContext);
 
   return (
-    <div>
+    <div className="grid grid-cols-2 gap-2 px-2">
       {filteredRecipesList?.reduce((acc, recipe, index) => {
         if (index < MAX_RECIPES_LENGTH) acc.push(recipe);
         return acc;
@@ -17,13 +17,19 @@ export default function Meals() {
           to={ `/meals/${recipe.idMeal}` }
           key={ recipe.idMeal }
         >
-          <div data-testid={ `${index}-recipe-card` }>
+          <div
+            data-testid={ `${index}-recipe-card` }
+            className="max-w-xs border border-purple-300 rounded opacity-90
+            hover:opacity-100 transition-all hover:shadow-md"
+          >
             <img
               src={ recipe.strMealThumb }
               alt={ recipe.strMeal }
               data-testid={ `${index}-card-img` }
+              className="w-full"
             />
-            <h2 data-testid={ `${index}-card-name` }>{recipe.strMeal}</h2>
+
+            <h2 className="p-2" data-testid={ `${index}-card-name` }>{recipe.strMeal}</h2>
           </div>
         </Link>
       ))}
