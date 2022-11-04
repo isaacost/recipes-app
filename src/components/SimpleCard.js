@@ -2,7 +2,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { shape, number } from 'prop-types';
 import { useContext } from 'react';
 import ShareButton from './ShareButton';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
+import blackHeartIcon from '../images/unfavorite-icon.png';
 import { RecipesContext } from '../contexts/RecipesContext';
 
 function SimpleCard({ recipe, index }) {
@@ -28,7 +28,7 @@ function SimpleCard({ recipe, index }) {
             src={ recipe.image }
             alt="Imagem da receita"
             data-testid={ `${index}-horizontal-image` }
-            className="rounded"
+            className="rounded h-full object-cover"
           />
         </Link>
       </div>

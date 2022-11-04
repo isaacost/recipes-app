@@ -10,6 +10,7 @@ export default function Header({ title }) {
   const [isShow, setIsShow] = useState(false);
   const history = useHistory();
   const { pathname } = history.location;
+
   return (
     <header className="bg-amber-400  px-6 py-4">
       <div className="flex justify-between ">

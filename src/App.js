@@ -7,7 +7,12 @@ function App() {
   return (
     <RecipesProvider>
       <UserProvider>
-        <Routes />
+        <div
+          className={ `bg-white sm:max-w-md mx-auto border-white border-8
+        rounded-xl min-h-screen my-4` }
+        >
+          <Routes />
+        </div>
       </UserProvider>
     </RecipesProvider>
   );

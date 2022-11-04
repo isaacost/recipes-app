@@ -25,7 +25,7 @@ export default function Profile() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4 w-1/2 mx-auto">
+      <div className="flex flex-col gap-4 w-64 mx-auto">
         <button
           type="button"
           data-testid="profile-done-btn"

@@ -10,9 +10,12 @@ export default function Footer() {
   return (
     <footer
       data-testid="footer"
-      className="mb-20 mt-20"
+      className="mb-20 mt-20 max-w-md relative"
     >
-      <div className="fixed bottom-0 bg-purple-800 w-full flex justify-around py-2">
+      <div
+        className={ `sm:max-w-[27rem] w-full -ml-2 sm:ml-0 fixed bottom-0 bg-purple-800 
+        flex justify-around py-2 rounded-xl` }
+      >
         <Link to="/meals">
           <img src={ mealIcon } alt="mealIcon" data-testid="meals-bottom-btn" />
         </Link>

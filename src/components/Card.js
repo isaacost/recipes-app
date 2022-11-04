@@ -76,7 +76,7 @@ export default function Card() {
           </p>
         </div>
 
-        {!pathname.includes('drinks') && (
+        {youtubeLink !== '' && (
           <iframe
             data-testid="video"
             title="YouTube video player"
