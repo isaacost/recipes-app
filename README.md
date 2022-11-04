@@ -33,7 +33,6 @@ Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua cr
 Esse projeto foi desenvolvido usando as seguintes tecnologias:
 
 -  [React.js](https://reactjs.org/)
--  [Redux](https://redux.js.org/)
 -  [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
 -  [TailwindCSS](https://tailwindcss.com/)
 -  [Figma](https://figma.com/)
@@ -69,18 +68,18 @@ $ npm start
 <br/><br/>
 
 <p align="center">
-  Criado e desenvolvido por <b>Vinicius Bortoletto</b>
+  Criado e desenvolvido por <b>Isabela Costa</b>
   <br/><br/>
   
-  <a href="https://vinibortoletto.vercel.app/">
+  <a href="https://isaacost.github.io/">
     <img alt="portfolio" height="30px" src="https://i.imgur.com/7lbNPnj.png" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://www.linkedin.com/in/vinicius-bortoletto/">
+  <a href="https://www.linkedin.com/in/isa-hcosta/">
     <img alt="linkedIn" height="30px" src="https://i.imgur.com/TQRXxhT.png" />
   </a>
   &nbsp;&nbsp;
-  <a href="mailto:ovinibortoletto@gmail.com?subject=website contact">
+  <a href="mailto:isa-hcosta@hotmail.com?subject=website contact">
     <img alt="email" height="30px" src="https://i.imgur.com/wu7e3PJ.png" />
   </a>
 </p>
