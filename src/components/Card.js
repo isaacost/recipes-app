@@ -76,7 +76,7 @@ export default function Card() {
           </p>
         </div>
 
-        {youtubeLink !== '' && (
+        {youtubeLink && youtubeLink !== '' && (
           <iframe
             data-testid="video"
             title="YouTube video player"

@@ -18,9 +18,9 @@ export default function Drinks() {
           key={ recipe.idDrink }
         >
           <div
-            className="max-w-xs h-48 border border-purple-300 rounded opacity-90
-            hover:opacity-100 transition-all hover:shadow-md"
             data-testid={ `${index}-recipe-card` }
+            className="max-w-xs min-h-48 border border-purple-300 rounded opacity-90
+            hover:opacity-100 transition-all hover:shadow-md"
           >
             <img
               src={ recipe.strDrinkThumb }
