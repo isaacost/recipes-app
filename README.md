@@ -61,8 +61,8 @@ $ npm start
   <li><a href="https://github.com/isaacost"/>Isabela Costa</a></li>
   <li><a href="https://github.com/PatriciaPSP"/>Patricia Pedroso</a></li>
   <li><a href="https://github.com/RafaelBechstedt"/>Rafael Bechstedt</a></li>
-  <li><a href="https://github.com/lucianoalmeidajr"/>Renan Munhoes</a></li>
-  <li><a href="https://github.com/munhoesrc"/>Vinicius Bortoletto</a></li>
+  <li><a href="https://github.com/munhoesrc"/>Renan Munhoes</a></li>
+  <li><a href="https://github.com/vinibortoletto"/>Vinicius Bortoletto</a></li>
 </ul>
 
 <br/><br/>
