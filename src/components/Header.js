@@ -14,13 +14,13 @@ export default function Header({ title }) {
   return (
     <header className="bg-amber-400  px-6 py-4">
       <div className="flex justify-between ">
-        <div className="flex items-center gap-4">
+        <Link to="meals" className="flex items-center gap-4">
           <img src={ logoHeader } alt="logo recipes app" />
           <p className="text-purple-800 text-lg">
             <span className="italic">RECIPES</span>
             <span className="ml-2 font-bold">app</span>
           </p>
-        </div>
+        </Link>
 
         <div className="flex gap-4 items-center">
           {
