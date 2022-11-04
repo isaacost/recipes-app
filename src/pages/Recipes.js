@@ -8,8 +8,6 @@ import Meals from './Meals';
 import { getRecipes, getRecipesCategories } from '../services/recipesAPI';
 import { RecipesContext } from '../contexts/RecipesContext';
 
-import beefImg from '../images/beef.png';
-
 const MAX_CATEGORIES_LENGTH = 5;
 
 export default function Recipes({ title }) {

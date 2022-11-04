@@ -28,7 +28,7 @@ export default function SearchBar() {
             placeholder="Pesquise por receitas"
             value={ searchInput }
             onChange={ (event) => setSearchInput(event.target.value) }
-            className="w-full rounded p-2 mb-4"
+            className="w-full rounded p-2 mb-4 text-purple-800"
           />
         </label>
 

@@ -3,8 +3,6 @@ import React, { useEffect, useContext } from 'react';
 import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipeDetails } from '../services/recipesAPI';
 
-import ShareButton from '../components/ShareButton';
-import FavoriteButton from '../components/FavoriteButton';
 import Card from '../components/Card';
 import StartButton from '../components/StartButton';
 
