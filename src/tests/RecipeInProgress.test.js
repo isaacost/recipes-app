@@ -6,11 +6,11 @@ import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
 import * as api from '../services/recipesAPI';
 
-import drinks from '../../cypress/mocks/drinks';
-import meals from '../../cypress/mocks/meals';
-import oneMeal from '../../cypress/mocks/oneMeal';
-import oneDrink from '../../cypress/mocks/oneDrink';
-import ONE_DRINK_MOCK from './helpers/oneDrinkMock';
+import drinks from './mocks/drinks';
+import meals from './mocks/meals';
+import oneMeal from './mocks/oneMeal';
+import oneDrink from './mocks/oneDrink';
+import ONE_DRINK_MOCK from './mocks/oneDrinkMock';
 
 jest.mock('../services/recipesAPI');
 jest.mock('clipboard-copy', () => jest.fn());

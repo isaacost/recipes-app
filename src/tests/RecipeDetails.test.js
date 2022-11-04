@@ -3,10 +3,10 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 
 import App from '../App';
-import ONE_DRINK_MOCK from './helpers/oneDrinkMock';
-import meals from '../../cypress/mocks/meals';
+import ONE_DRINK_MOCK from './mocks/oneDrinkMock';
+import meals from './mocks/meals';
 import { ENDPOINT } from '../constants/constants';
-import DONE_RECIPE_MOCK from './helpers/doneRecipeMock';
+import DONE_RECIPE_MOCK from './mocks/doneRecipeMock';
 
 const IN_PROGRESS_LOCAL_MOCK = {
   drinks: {

@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Card from '../components/Card';
-import FavoriteButton from '../components/FavoriteButton';
-import ShareButton from '../components/ShareButton';
 import { RecipesContext } from '../contexts/RecipesContext';
 import { getRecipeDetails } from '../services/recipesAPI';
 

@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import logo from '../images/logo.png';
-import loginBackground from '../images/login-background.png';
 
 function Login() {
   const {

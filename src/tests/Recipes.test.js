@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { screen, act } from '@testing-library/react';
 import App from '../App';
 import renderWithRouter from './helpers/renderWithRouter';
-// import { getRecipes } from '../services/recipesAPI';
-import meals from '../../cypress/mocks/meals';
-import drinks from '../../cypress/mocks/drinks';
-import beefMeals from '../../cypress/mocks/beefMeals';
-import cocoaDrinks from '../../cypress/mocks/cocoaDrinks';
-import mealCategories from '../../cypress/mocks/mealCategories';
-import drinkCategories from '../../cypress/mocks/drinkCategories';
+
+import meals from './mocks/meals';
+import drinks from './mocks/drinks';
+import beefMeals from './mocks/beefMeals';
+import cocoaDrinks from './mocks/cocoaDrinks';
+import mealCategories from './mocks/mealCategories';
+import drinkCategories from './mocks/drinkCategories';
 import * as api from '../services/recipesAPI';
 
 jest.mock('../services/recipesAPI');
