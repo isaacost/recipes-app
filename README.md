@@ -17,10 +17,10 @@ Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua cr
 <hr />
 
 <p align="center">
-  <a href="https://isa-recipes-app-five-tawny.vercel.app/">
-      <img alt="website mockup" src="https://i.imgur.com/4VVeffy.png" />    
+ <a href="https://isa-recipes-app-five-tawny.vercel.app/">
+     <!-- <img alt="website mockup" src="https://i.imgur.com/4VVeffy.png" />    --!>
   </a>
-</p>
+ </p> 
 
 <p align="center">
   <a href="#rocket-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
